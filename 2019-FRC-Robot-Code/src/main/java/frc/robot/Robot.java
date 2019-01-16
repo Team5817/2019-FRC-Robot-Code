@@ -26,7 +26,9 @@ public class Robot extends IterativeRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   private Drive drive = Drive.getInstance();
+  private Controller controller = Controller.getInstance();
 
+  private double controllerJoystickDeadzone = 0.1;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -90,6 +92,18 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
+    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
+      drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
+      drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
+    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * -1){
+      drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
+      drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
+    }else{
+      if(controller.getXRightDriver() < controllerJoystickDeadzone || controller .getXRightDriver() > controllerJoystickDeadzone*-1){
+        drive.rightSideControl(controller.getXRightDriver());
+        drive.leftSideControl(controller.getXRightDriver() * -1);
+      }
+    }
   }
 
   /**
