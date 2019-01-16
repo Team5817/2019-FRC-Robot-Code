@@ -7,8 +7,19 @@
 
 package frc.robot;
 
-/**
- * Add your docs here.
- */
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 public class Drive {
+
+    TalonSRX rightDriveOne;
+    TalonSRX rightDriveTwo;
+    TalonSRX rightDriveThree;
+    TalonSRX leftDriveOne;
+    TalonSRX leftDriveTwo;
+
+    public void Drive(){
+        rightDriveOne = new TalonSRX(0);
+        rightDriveTwo = new TalonSRX(1);
+    }
+
 }
