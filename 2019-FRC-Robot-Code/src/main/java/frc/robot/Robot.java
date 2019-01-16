@@ -92,6 +92,11 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    /* Controls the six wheel base using the Y axis on the right joystick to control power
+     * and the X axis on the left joystick to adjust the output in order to allow the robot
+     * to turn */
+
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
       drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
       drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
