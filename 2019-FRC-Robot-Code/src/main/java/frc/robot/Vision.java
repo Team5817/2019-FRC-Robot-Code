@@ -10,5 +10,5 @@ package frc.robot;
 /**
  * Add your docs here.
  */
-public class Drive {
+public class Vision {
 }
