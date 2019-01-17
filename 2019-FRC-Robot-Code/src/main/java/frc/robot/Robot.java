@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 
   private Drive drive = Drive.getInstance();
   private Controller controller = Controller.getInstance();
+  private Intake intake = Intake.getInstance();
 
   private double controllerJoystickDeadzone = 0.1;
   /**
@@ -98,16 +99,24 @@ public class Robot extends IterativeRobot {
      * to turn */
 
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
-      drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
+      drive.rightSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
+      drive.leftSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * -1){
       drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
       drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
     }else{
-      if(controller.getXRightDriver() < controllerJoystickDeadzone || controller .getXRightDriver() > controllerJoystickDeadzone*-1){
+      if(controller.getXRightDriver() < controllerJoystickDeadzone *-1 || controller .getXRightDriver() > controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver());
         drive.leftSideControl(controller.getXRightDriver() * -1);
       }
+    }
+
+    if (controller.getRightTriggerDriver()> controllerJoystickDeadzone){
+      intake.pullIn(controller.getRightTriggerDriver());
+    }else if(controller.getLeftTriggerDriver()> controllerJoystickDeadzone){
+      intake.pushOut(controller.getLeftTriggerDriver());
+    }else{
+      intake.stop();
     }
   }
 
