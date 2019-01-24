@@ -99,15 +99,15 @@ public class Robot extends IterativeRobot {
      * to turn */
 
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
-      drive.leftSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
+      drive.rightSideControl(controller.getYLeftDriver() + controller.getXRightDriver()*-0.5);
+      drive.leftSideControl(controller.getYLeftDriver() - controller.getXRightDriver()*-0.5);
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * -1){
-      drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver());
-      drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver());
+      drive.rightSideControl(controller.getYLeftDriver() - controller.getXRightDriver()*-0.5);
+      drive.leftSideControl(controller.getYLeftDriver() + controller.getXRightDriver()*-0.5);
     }else{
       if(controller.getXRightDriver() < controllerJoystickDeadzone *-1 || controller .getXRightDriver() > controllerJoystickDeadzone){
-        drive.rightSideControl(controller.getXRightDriver());
-        drive.leftSideControl(controller.getXRightDriver() * -1);
+        drive.rightSideControl(controller.getXRightDriver()*-0.5);
+        drive.leftSideControl(controller.getXRightDriver() * -0.5);
       }
     }
 
