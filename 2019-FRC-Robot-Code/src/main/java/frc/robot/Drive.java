@@ -55,5 +55,10 @@ public class Drive {
         leftDriveTwo.follow(leftDriveOne);
         leftDriveOne.set(ControlMode.PercentOutput, input);
     }
-
+//change talon 5 to 3
+    public void light(double input){
+    leftDriveTwo.set(ControlMode.PercentOutput, input);
 }
+
+} 
+

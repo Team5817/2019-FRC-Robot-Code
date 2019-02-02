@@ -17,19 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
  * project.
- * hello world
  */
 public class Robot extends IterativeRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
-  private Drive drive = Drive.getInstance();
-  private Controller controller = Controller.getInstance();
-  private Intake intake = Intake.getInstance();
-
-  private double controllerJoystickDeadzone = 0.15;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -94,37 +87,6 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-    /* Controls the six wheel base using the Y axis on the right joystick to control power
-     * and the X axis on the left joystick to adjust the output in order to allow the robot
-     * to turn */
-
-    
-     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-    
-    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-    
-    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
-        drive.rightSideControl(controller.getXRightDriver()*(-1));
-        drive.leftSideControl(controller.getXRightDriver());
-
-      }else {
-        drive.rightSideControl(0);
-        drive.leftSideControl(0);
-    }
-    
-
-    if (controller.getRightTriggerDriver()> controllerJoystickDeadzone){
-      intake.pullIn(controller.getRightTriggerDriver());
-    }else if(controller.getLeftTriggerDriver()> controllerJoystickDeadzone){
-      intake.pushOut(controller.getLeftTriggerDriver());
-    }else{
-      intake.stop();
-    }
   }
 
   /**
@@ -132,11 +94,5 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void testPeriodic() {
-    if (controller.getButtonADriver()){
-      drive.light(1);
-    }else{
-     drive.light(0);
-    } 
-    }
   }
-
+}

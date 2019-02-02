@@ -25,7 +25,7 @@ public class Controller {
 		//created a new object of type Joystick which is indexed at zero.
 		
 		codriverController = new Joystick(1);
-		//created a new object of typer Joystick indexed at zero.
+		//created a new object of type Joystick indexed at one.
 	}
 	
 	
@@ -34,7 +34,7 @@ public class Controller {
 		//returns the value of the X axis in the left joystick(-1 to 1)
 	}
 	public double getYLeftDriver(){
-		return driverController.getRawAxis(1);
+		return driverController.getRawAxis(4) * (-1);
 		//returns the value of the Y axis on the left joystick(-1 to 1)
 	}
 	public double getRightTriggerDriver(){
@@ -48,7 +48,7 @@ public class Controller {
 		//left trigger returns 0 to 1
 	}
 	public double getXRightDriver(){
-		return driverController.getRawAxis(4);
+		return driverController.getRawAxis(1);
 		//returns the value of the X axis in the right joystick(-1 to 1)
 	}
 	public double getYRightDriver(){
