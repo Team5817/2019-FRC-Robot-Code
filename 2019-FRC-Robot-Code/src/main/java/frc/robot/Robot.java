@@ -98,7 +98,32 @@ public class Robot extends IterativeRobot {
     /* Controls the six wheel base using the Y axis on the right joystick to control power
      * and the X axis on the left joystick to adjust the output in order to allow the robot
      * to turn */
+if (controller.getRightBumperDriver()){
+  if (controller.getYLeftDriver() > controllerJoystickDeadzone){
+    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
+    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
+  
+  }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
+    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
+    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
+  
+  }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+      drive.rightSideControl(controller.getXRightDriver()*(-1));
+      drive.leftSideControl(controller.getXRightDriver());
 
+    }else {
+      drive.rightSideControl(0);
+      drive.leftSideControl(0);
+    }
+    if (controller.getRightTriggerDriver()> controllerJoystickDeadzone){
+       intake.pullIn(controller.getRightTriggerDriver());
+    }else if(controller.getLeftTriggerDriver()> controllerJoystickDeadzone){
+      intake.pushOut(controller.getLeftTriggerDriver());
+    }else{
+             intake.stop();
+    }
+  
+}else{
     
      if (controller.getYLeftDriver() > controllerJoystickDeadzone){
       drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
@@ -126,7 +151,7 @@ public class Robot extends IterativeRobot {
       intake.stop();
     }
   }
-
+  }
   /**
    * This function is called periodically during test mode.
    */
