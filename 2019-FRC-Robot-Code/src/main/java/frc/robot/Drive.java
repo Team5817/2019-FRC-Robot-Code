@@ -59,6 +59,17 @@ public class Drive {
     public void light(double input){
     leftDriveTwo.set(ControlMode.PercentOutput, input);
 }
+public int getRightDriveVelocity(){
+    return rightDriveOne.getSelectedSensorVelocity(0);
+}
 
-} 
+public int getLeftDriveVelocity(){
+    return leftDriveOne.getSelectedSensorVelocity(1);
+}
+
+
+
+}
+
+
 

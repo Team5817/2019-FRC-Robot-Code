@@ -150,6 +150,7 @@ if (controller.getRightBumperDriver()){
     }else{
       intake.stop();
     }
+    
   }
   }
   /**
@@ -157,11 +158,45 @@ if (controller.getRightBumperDriver()){
    */
   @Override
   public void testPeriodic() {
-    if (controller.getButtonADriver()){
-      drive.light(1);
-    }else{
-     drive.light(0);
-    } 
-    }
-  }
 
+    SmartDashboard.putNumber("Left Drive Velocity", drive.getLeftDriveVelocity());
+    SmartDashboard.putNumber("Right Drive Velocity", drive.getRightDriveVelocity());
+    
+  if (controller.getRightBumperDriver()){
+
+    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.01));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+
+    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.01));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+
+    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+        drive.rightSideControl(controller.getXRightDriver()*(-1));
+        drive.leftSideControl(controller.getXRightDriver());
+
+      }else {
+        drive.rightSideControl(0);
+        drive.leftSideControl(0);
+    }
+    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+
+    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+
+    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+        drive.rightSideControl(controller.getXRightDriver()*(-1));
+        drive.leftSideControl(controller.getXRightDriver());
+      }else {
+        drive.rightSideControl(0);
+        drive.leftSideControl(0);
+
+    
+  }
+}
+}
+}
