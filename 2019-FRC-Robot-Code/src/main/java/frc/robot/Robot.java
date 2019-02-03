@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.CameraServer;
-
+import edu.wpi.first.wpilibj.shuffleboard.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -110,7 +110,7 @@ if (controller.getRightBumperDriver()){
     drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
     drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
   
-  }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+  }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
       drive.rightSideControl(controller.getXRightDriver()*(-1));
       drive.leftSideControl(controller.getXRightDriver());
 
@@ -118,14 +118,6 @@ if (controller.getRightBumperDriver()){
       drive.rightSideControl(0);
       drive.leftSideControl(0);
     }
-    if (controller.getRightTriggerDriver()> controllerJoystickDeadzone){
-       intake.pullIn(controller.getRightTriggerDriver());
-    }else if(controller.getLeftTriggerDriver()> controllerJoystickDeadzone){
-      intake.pushOut(controller.getLeftTriggerDriver());
-    }else{
-             intake.stop();
-    }
-  
 }else{
     
      if (controller.getYLeftDriver() > controllerJoystickDeadzone){
@@ -136,7 +128,7 @@ if (controller.getRightBumperDriver()){
       drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
     
-    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+    }else if(controller.getXRightDriver() > controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver()*(-1));
         drive.leftSideControl(controller.getXRightDriver());
 
@@ -144,18 +136,8 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
-    
-
-    if (controller.getRightTriggerDriver()> controllerJoystickDeadzone){
-      intake.pullIn(controller.getRightTriggerDriver());
-    }else if(controller.getLeftTriggerDriver()> controllerJoystickDeadzone){
-      intake.pushOut(controller.getLeftTriggerDriver());
-    }else{
-      intake.stop();
-    }
-    
   }
-  }
+}
   /**
    * This function is called periodically during test mode.
    */
@@ -183,6 +165,7 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
+  }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
       drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));

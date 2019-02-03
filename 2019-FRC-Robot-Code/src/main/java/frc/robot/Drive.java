@@ -55,16 +55,14 @@ public class Drive {
         leftDriveTwo.follow(leftDriveOne);
         leftDriveOne.set(ControlMode.PercentOutput, input);
     }
-//change talon 5 to 3
-    public void light(double input){
-    leftDriveTwo.set(ControlMode.PercentOutput, input);
-}
+
+
 public int getRightDriveVelocity(){
     return rightDriveOne.getSelectedSensorVelocity(0);
 }
 
 public int getLeftDriveVelocity(){
-    return leftDriveOne.getSelectedSensorVelocity(1);
+    return leftDriveTwo.getSelectedSensorVelocity(0);
 }
 
 
