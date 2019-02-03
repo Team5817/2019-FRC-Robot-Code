@@ -150,12 +150,12 @@ if (controller.getRightBumperDriver()){
   if (controller.getRightBumperDriver()){
 
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.01));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.5));
 
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.01));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.5));
 
     }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver()*(-1));
@@ -167,12 +167,12 @@ if (controller.getRightBumperDriver()){
     }
   }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.5));
 
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.5));
 
     }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver()*(-1));
