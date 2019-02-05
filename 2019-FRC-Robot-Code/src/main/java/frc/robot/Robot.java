@@ -22,6 +22,11 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
  * hello world
  */
 public class Robot extends IterativeRobot {
+  /**
+   *
+   */
+
+  private static final int _0 = 0;
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -30,6 +35,7 @@ public class Robot extends IterativeRobot {
   private Drive drive = Drive.getInstance();
   private Controller controller = Controller.getInstance();
   private Intake intake = Intake.getInstance();
+  private Elevator elevator = Elevator.getInstance();
 
   private double controllerJoystickDeadzone = 0.15;
 
@@ -143,10 +149,11 @@ if (controller.getRightBumperDriver()){
    */
   @Override
   public void testPeriodic() {
-
+//displays to smart dashboard
     SmartDashboard.putNumber("Left Drive Velocity", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("Right Drive Velocity", drive.getRightDriveVelocity());
-    
+    //drive code using velocity
+    //slow mode
   if (controller.getRightBumperDriver()){
 
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
@@ -165,6 +172,7 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
+    //normal drive
   }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
@@ -183,6 +191,16 @@ if (controller.getRightBumperDriver()){
 
 
   }
+}
+//elevator code
+if (controller.getLeftTriggerDriver() > controllerJoystickDeadzone){
+  elevator.elevatorControl(controller.getLeftTriggerDriver());
+
+}else if(controller.getRightTriggerDriver() > controllerJoystickDeadzone){
+  elevator.elevatorControl(controller.getRightTriggerDriver()*(-1));
+  
+}else{
+  elevator.elevatorControl(0);
 }
 }
 }
