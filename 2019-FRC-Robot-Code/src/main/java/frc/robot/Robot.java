@@ -103,12 +103,12 @@ public class Robot extends IterativeRobot {
      * to turn */
 if (controller.getRightBumperDriver()){
   if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
-    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
+    drive.rightSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
+    drive.leftSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
   
   }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
-    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
+    drive.rightSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
+    drive.leftSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
   
   }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
       drive.rightSideControl(controller.getXRightDriver()*(-1));
@@ -121,7 +121,7 @@ if (controller.getRightBumperDriver()){
 }else{
     
      if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
     
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
@@ -167,21 +167,21 @@ if (controller.getRightBumperDriver()){
     }
   }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
 
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
 
     }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
-        drive.rightSideControl(controller.getXRightDriver()*(-1));
-        drive.leftSideControl(controller.getXRightDriver());
+        drive.leftSideControl(controller.getXRightDriver()*(-1));
+        drive.rightSideControl(controller.getXRightDriver());
       }else {
         drive.rightSideControl(0);
         drive.leftSideControl(0);
 
-    
+
   }
 }
 }
