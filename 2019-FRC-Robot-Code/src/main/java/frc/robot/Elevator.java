@@ -24,38 +24,41 @@ public class Elevator {
 	}
 
     /* Creates variables of the TalonSRX class for each talon used in the elevator*/
-    TalonSRX elevatorOne;
-    TalonSRX elevatorTwo;
-    TalonSRX elevatorThree;
+    TalonSRX elevatorMotorOne;
+    TalonSRX elevatorMotorTwo;
+    TalonSRX elevatorMotorThree;
 
 
     /* Elevator method assigns a object of the Talon Class for each physical Talon SRX used*/
     public Elevator(){
 
-        elevatorOne = new TalonSRX(6);
-        elevatorTwo = new TalonSRX(7);
-        elevatorThree = new TalonSRX(8);
+        elevatorMotorOne = new TalonSRX(6);
+        elevatorMotorTwo = new TalonSRX(7);
+        elevatorMotorThree = new TalonSRX(8);
         
     }
 
     /* Methods which control the outputs to the motors */
     /* The follower method causes the talons to follow the output of the master talon assigned in parenthases */
     public void elevatorControl(double input){
-        elevatorThree.follow(elevatorOne);
-        elevatorTwo.follow(elevatorOne);
-        elevatorOne.set(ControlMode.PercentOutput, input);
+        elevatorMotorThree.follow(elevatorMotorOne);
+        elevatorMotorTwo.follow(elevatorMotorOne);
+        elevatorMotorOne.set(ControlMode.PercentOutput, input);
     }
     public int getElevatorPosition(){
-        return elevatorOne.getSelectedSensorPosition(0);
-    
-
-    
-
-
-
-
+        return elevatorMotorOne.getSelectedSensorPosition(0);
     }
+        public void zero(){
+            elevatorMotorOne.setSelectedSensorPosition(0, 0, 10);
+ }
+ public void setElevatorPosition(int value){
+		
+        elevatorMotorThree.follow(elevatorMotorOne);
+        elevatorMotorTwo.follow(elevatorMotorOne);
+        elevatorMotorOne.set(ControlMode.PercentOutput, value);
 
+        }
+        
 }
 
 

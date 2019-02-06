@@ -39,6 +39,8 @@ public class Robot extends IterativeRobot {
 
   private double controllerJoystickDeadzone = 0.15;
 
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -149,9 +151,13 @@ if (controller.getRightBumperDriver()){
    */
   @Override
   public void testPeriodic() {
+
+  
+
 //displays to smart dashboard
     SmartDashboard.putNumber("Left Drive Velocity", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("Right Drive Velocity", drive.getRightDriveVelocity());
+
     //drive code using velocity
     //slow mode
   if (controller.getRightBumperDriver()){
@@ -172,6 +178,7 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
+
     //normal drive
   }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
@@ -192,8 +199,17 @@ if (controller.getRightBumperDriver()){
 
   }
 }
+
 //elevator code
-if (elevator.getElevatorPosition() < 1){
+int ZERO; 
+
+
+//zero elevator
+
+if (controller.getStartButtonDriver()){
+  elevator.zero();
+}
+if (elevator.getElevatorPosition() < 10){
 if (controller.getLeftTriggerDriver() > controllerJoystickDeadzone){
   elevator.elevatorControl(controller.getLeftTriggerDriver());
 
@@ -210,6 +226,20 @@ if (elevator.getElevatorPosition() > 0){
 }else{
   elevator.elevatorControl(0);
 }
+if (controller.getDpadDriver() == 0){
+  elevator.setElevatorPosition(1);
+
+}else if (controller.getDpadDriver() == 90){
+  elevator.setElevatorPosition(2);
+
+}else if (controller.getDpadDriver() == 180){
+  elevator.setElevatorPosition(3);
+
+}else if (controller.getDpadDriver() == 270){
+  elevator.setElevatorPosition(4);
+      
 }
 }
 }
+}
+
