@@ -45,14 +45,16 @@ public class Elevator {
         elevatorTwo.follow(elevatorOne);
         elevatorOne.set(ControlMode.PercentOutput, input);
     }
-
+    public int getElevatorPosition(){
+        return elevatorOne.getSelectedSensorPosition(0);
+    
 
     
 
 
 
 
-
+    }
 
 }
 

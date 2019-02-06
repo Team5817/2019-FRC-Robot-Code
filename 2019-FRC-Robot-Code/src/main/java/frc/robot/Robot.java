@@ -193,14 +193,23 @@ if (controller.getRightBumperDriver()){
   }
 }
 //elevator code
+if (elevator.getElevatorPosition() < 1){
 if (controller.getLeftTriggerDriver() > controllerJoystickDeadzone){
   elevator.elevatorControl(controller.getLeftTriggerDriver());
 
-}else if(controller.getRightTriggerDriver() > controllerJoystickDeadzone){
+
+  
+}else{
+  elevator.elevatorControl(0);
+}
+  }
+if (elevator.getElevatorPosition() > 0){
+ if(controller.getRightTriggerDriver() > controllerJoystickDeadzone){
   elevator.elevatorControl(controller.getRightTriggerDriver()*(-1));
   
 }else{
   elevator.elevatorControl(0);
+}
 }
 }
 }
