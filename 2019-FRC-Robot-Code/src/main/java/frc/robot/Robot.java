@@ -200,11 +200,8 @@ if (controller.getRightBumperDriver()){
   }
 }
 
+
 //elevator code
-int ZERO; 
-
-
-//zero elevator
 
 if (controller.getStartButtonDriver()){
   elevator.zero();
@@ -251,5 +248,6 @@ if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
   intake.leftIntakeControl(0);
   intake.rightIntakeControl(0);
 }
-    }
+
+}
 }
