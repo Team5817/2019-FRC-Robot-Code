@@ -44,4 +44,15 @@ public class Intake {
         rightIntake.set(ControlMode.PercentOutput, 0.0);
         leftIntake.set(ControlMode.PercentOutput, 0.0);
     }
+    public void leftIntakeControl(double input){
+        rightIntake.set(ControlMode.PercentOutput, input);
+
+    }
+    public void rightIntakeControl(double input){
+        rightIntake.set(ControlMode.PercentOutput, input);
+
+    }
+
+        
+    
 }

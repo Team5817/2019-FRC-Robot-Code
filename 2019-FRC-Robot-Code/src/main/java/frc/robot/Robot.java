@@ -239,7 +239,17 @@ if (controller.getDpadDriver() == 0){
   elevator.setElevatorPosition(4);
       
 }
-}
-}
-}
 
+}
+if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
+  intake.leftIntakeControl(controller.getLeftTriggerCoDriver() * (-1));
+  intake.rightIntakeControl(controller.getLeftTriggerCoDriver());
+}else if(controller.getRightTriggerCoDriver() > controllerJoystickDeadzone){
+  intake.rightIntakeControl(controller.getRightTriggerCoDriver());
+  intake.rightIntakeControl(controller.getRightTriggerCoDriver() * (-1));
+}else{
+  intake.leftIntakeControl(0);
+  intake.rightIntakeControl(0);
+}
+    }
+}

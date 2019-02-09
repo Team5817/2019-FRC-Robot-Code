@@ -32,9 +32,9 @@ public class Elevator {
     /* Elevator method assigns a object of the Talon Class for each physical Talon SRX used*/
     public Elevator(){
 
-        elevatorMotorOne = new TalonSRX(6);
-        elevatorMotorTwo = new TalonSRX(7);
-        elevatorMotorThree = new TalonSRX(8);
+        elevatorMotorOne = new TalonSRX(8);
+        elevatorMotorTwo = new TalonSRX(9);
+        elevatorMotorThree = new TalonSRX(10);
         
     }
 
@@ -57,7 +57,9 @@ public class Elevator {
         elevatorMotorTwo.follow(elevatorMotorOne);
         elevatorMotorOne.set(ControlMode.PercentOutput, value);
 
+        
         }
+    
         
 }
 
