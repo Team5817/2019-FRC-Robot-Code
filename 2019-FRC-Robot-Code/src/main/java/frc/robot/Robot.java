@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
   private Controller controller = Controller.getInstance();
   private Intake intake = Intake.getInstance();
   private Elevator elevator = Elevator.getInstance();
-
+  private Gyro gyro = Gyro.getInstance();
   private double controllerJoystickDeadzone = 0.15;
 
 
@@ -152,8 +152,9 @@ if (controller.getRightBumperDriver()){
   @Override
   public void testPeriodic() {
 
-  
-
+    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
+    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
+    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
 //displays to smart dashboard
     SmartDashboard.putNumber("Left Drive Velocity", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("Right Drive Velocity", drive.getRightDriveVelocity());
@@ -182,12 +183,12 @@ if (controller.getRightBumperDriver()){
     //normal drive
   }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
 
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
 
     }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
         drive.leftSideControl(controller.getXRightDriver()*(-1));
@@ -196,7 +197,7 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
 
-
+        
   }
 }
 
