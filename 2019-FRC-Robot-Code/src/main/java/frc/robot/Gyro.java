@@ -10,7 +10,6 @@ import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 import edu.wpi.first.wpilibj.SerialPort;
 
-
 /**
  * Add your docs here.
  */
@@ -21,7 +20,7 @@ public class Gyro {
 	
 	private Gyro() {
 		byte update_rate = 50;
-		navx = new AHRS(SerialPort.Port.kUSB, SerialDataType.kProcessedData, update_rate);
+		navx = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, update_rate);
 	}
     public static Gyro getInstance() {
 		if(instance_ == null) {

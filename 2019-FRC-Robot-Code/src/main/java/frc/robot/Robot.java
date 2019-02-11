@@ -183,12 +183,12 @@ if (controller.getRightBumperDriver()){
     //normal drive
   }else{
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver() * 0.5));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver() * 0.5));
 
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver() * 0.5));
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver() * 0.5));
 
     }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
         drive.leftSideControl(controller.getXRightDriver()*(-1));
