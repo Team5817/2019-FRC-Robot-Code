@@ -31,13 +31,14 @@ public class Robot extends IterativeRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private Position position = Position.ZERO;
 
   private Drive drive = Drive.getInstance();
   private Controller controller = Controller.getInstance();
   private Intake intake = Intake.getInstance();
   private Elevator elevator = Elevator.getInstance();
   private Gyro gyro = Gyro.getInstance();
-  private double controllerJoystickDeadzone = 0.15;
+  private double controllerJoystickDeadzone = 0.2;
 
 
 
@@ -106,17 +107,22 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
 
+    //gyro displays to smartdashboard
+    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
+    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
+    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
+
     /* Controls the six wheel base using the Y axis on the right joystick to control power
      * and the X axis on the left joystick to adjust the output in order to allow the robot
      * to turn */
 if (controller.getRightBumperDriver()){
   if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-    drive.rightSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
-    drive.leftSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
+    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
+    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
   
   }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-    drive.rightSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
-    drive.leftSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
+    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
+    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
   
   }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
       drive.rightSideControl(controller.getXRightDriver()*(-1));
@@ -129,12 +135,12 @@ if (controller.getRightBumperDriver()){
 }else{
     
      if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
     
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
     
     }else if(controller.getXRightDriver() > controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver()*(-1));
@@ -152,26 +158,29 @@ if (controller.getRightBumperDriver()){
   @Override
   public void testPeriodic() {
 
-    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
-    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
-    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
 //displays to smart dashboard
     SmartDashboard.putNumber("Left Drive Velocity", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("Right Drive Velocity", drive.getRightDriveVelocity());
 
+    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
+    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
+    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
+
+    if(controller.getLeftJoystickPressDriver() && controller.getRightJoystickPressDriver()){
+      SmartDashboard.putNumber("Lucky Number 5", 5);
+    }
+
+    
     //drive code using velocity
-    //slow mode
-  if (controller.getRightBumperDriver()){
-
     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.01));
-      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.01));
-
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+    
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.01));
-      drive.leftSideControl(drive.getRightDriveVelocity() + (controller.getXRightDriver()*0.01));
-
-    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
+    
+    }else if(controller.getXRightDriver() > controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver()*(-1));
         drive.leftSideControl(controller.getXRightDriver());
 
@@ -180,65 +189,61 @@ if (controller.getRightBumperDriver()){
         drive.leftSideControl(0);
     }
 
-    //normal drive
-  }else{
-    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver() * 0.5));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver() * 0.5));
-
-    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver() * 0.5));
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver() * 0.5));
-
-    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
-        drive.leftSideControl(controller.getXRightDriver()*(-1));
-        drive.rightSideControl(controller.getXRightDriver());
-      }else {
-        drive.rightSideControl(0);
-        drive.leftSideControl(0);
-
-        
-  }
-}
-
 
 //elevator code
 
-if (controller.getStartButtonDriver()){
-  elevator.zero();
+if(controller.getButtonADriver()){
+  position = Position.PANELLOW;
+}else if(controller.getButtonXCoDriver()){
+  position = Position.PANELMID;
+}else if(controller.getButtonBDriver()){
+  position = Position.PANELHIGH;
+}else if(controller.getDpadDriver()==180){
+  position = Position.CARGOLOW;
+}else if(controller.getDpadDriver()==90){
+  position = Position.CARGOMID;
+}else if(controller.getDpadDriver()==270){
+  position = Position.PANELHIGH;
+}else if(controller.getDpadDriver()==0){
+  position = Position.CARGOSHIP;
 }
-if (elevator.getElevatorPosition() < 10){
-if (controller.getLeftTriggerDriver() > controllerJoystickDeadzone){
-  elevator.elevatorControl(controller.getLeftTriggerDriver());
 
+switch(position){
+  case PANELLOW:
+  elevator.setElevatorPosition(100);
+  break;
 
+  case PANELMID:
+  elevator.setElevatorPosition(200);
+  break;
+
+  case PANELHIGH:
+  elevator.setElevatorPosition(300);
+  break;
+
+  case CARGOLOW:
+  elevator.setElevatorPosition(150);
+  break;
   
-}else{
-  elevator.elevatorControl(0);
-}
-  }
-if (elevator.getElevatorPosition() > 0){
- if(controller.getRightTriggerDriver() > controllerJoystickDeadzone){
-  elevator.elevatorControl(controller.getRightTriggerDriver()*(-1));
-  
-}else{
-  elevator.elevatorControl(0);
-}
-if (controller.getDpadDriver() == 0){
-  elevator.setElevatorPosition(1);
+  case CARGOMID:
+  elevator.setElevatorPosition(250);
+  break;
 
-}else if (controller.getDpadDriver() == 90){
-  elevator.setElevatorPosition(2);
+  case CARGOHIGH:
+  elevator.setElevatorPosition(350);
+  break;
 
-}else if (controller.getDpadDriver() == 180){
-  elevator.setElevatorPosition(3);
+  case CARGOSHIP:
+  elevator.setElevatorPosition(250);
+  break;
 
-}else if (controller.getDpadDriver() == 270){
-  elevator.setElevatorPosition(4);
-      
+  default:
+  elevator.setElevatorPosition(0);
+  break;
 }
 
-}
+
+//intake
 if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
   intake.leftIntakeControl(controller.getLeftTriggerCoDriver() * (-1));
   intake.rightIntakeControl(controller.getLeftTriggerCoDriver());
