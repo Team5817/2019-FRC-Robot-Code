@@ -77,6 +77,11 @@ public class Robot extends IterativeRobot {
     if(controller.getStartButtonCoDriver()){
       elevator.zero();
     }
+    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
+    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
+    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
+    SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
+    SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
   }
 
 
@@ -121,15 +126,6 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
 
-    //gyro displays to smartdashboard
-    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
-    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
-    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
-    SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
-    SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
-    
-    
-
     /* Controls the six wheel base using the Y axis on the right joystick to control power
      * and the X axis on the left joystick to adjust the output in order to allow the robot
      * to turn */
@@ -168,6 +164,13 @@ if (controller.getRightBumperDriver()){
       }else {
         drive.rightSideControl(0);
         drive.leftSideControl(0);
+    }
+    if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+      drive.clawControl(controller.getRightTriggerDriver());
+    }else if(controller.getLeftBumperDriver() && controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+      drive.clawControl(controller.getLeftTriggerDriver() * (-1));
+    }else{
+      drive.clawControl(0);
     }
   }
 
