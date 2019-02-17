@@ -248,8 +248,12 @@ if (controller.getRightBumperDriver()){
     elevator.setWristPosition(250);
     break;
 
+    case  ZERO:
+    elevator.setElevatorPosition(500);
+    elevator.setWristPosition(50);
+
     case MANUALOVERRIDE:
-    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() > controllerJoystickDeadzone){
+    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() <-1 * controllerJoystickDeadzone){
       elevator.manualElevatorControl(controller.getYLeftCoDriver());
     }else{
       elevator.manualElevatorControl(0);
