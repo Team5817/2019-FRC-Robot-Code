@@ -44,7 +44,7 @@ public class Elevator {
     public void motionMagic(){
         int kTimeoutMs=10;
         elevatorMotorOne.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, kTimeoutMs);
-		elevatorMotorOne.setSensorPhase(false);
+		elevatorMotorOne.setSensorPhase(true);
 		elevatorMotorOne.setInverted(false);
 
 		/* Set relevant frame periods to be at least as fast as periodic rate */

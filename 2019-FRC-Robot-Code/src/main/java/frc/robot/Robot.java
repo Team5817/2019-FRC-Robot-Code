@@ -166,6 +166,8 @@ if (controller.getRightBumperDriver()){
     SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
     SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
 
+    SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
+
     if(controller.getLeftJoystickPressDriver() && controller.getRightJoystickPressDriver()){
       SmartDashboard.putNumber("Lucky Number 5", 5);
     }
@@ -207,8 +209,7 @@ if(controller.getButtonADriver()){
 }else if(controller.getDpadDriver()==0){
   position = Position.CARGOSHIP;
 }
-
-switch(position){
+ switch(position){
   case PANELLOW:
   elevator.setElevatorPosition(100);
   break;
@@ -242,7 +243,18 @@ switch(position){
   break;
 }
 
+if (controller.getLeftTriggerDriver() > controllerJoystickDeadzone){
+  elevator.manualElevatorControl(controller.getLeftTriggerDriver() * (-.125));
+}else if(controller.getRightTriggerDriver() > controllerJoystickDeadzone){
+  elevator.manualElevatorControl(controller.getRightTriggerDriver());
+}else{
+  elevator.manualElevatorControl(0);
+}
 
+if(controller.getStartButtonDriver()){
+  
+  elevator.zero();
+}
 //intake
 if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
   intake.leftIntakeControl(controller.getLeftTriggerCoDriver() * (-1));
