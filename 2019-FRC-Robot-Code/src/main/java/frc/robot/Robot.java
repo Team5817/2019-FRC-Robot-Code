@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,7 +44,7 @@ public class Robot extends IterativeRobot {
   private Elevator elevator = Elevator.getInstance();
   private Gyro gyro = Gyro.getInstance();
   private double controllerJoystickDeadzone = 0.2;
-
+  private Vision vision = Vision.getInstance();
 
 
   /**
@@ -111,6 +116,10 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
     SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
     SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
+    SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
+    SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
+    
+    
 
     /* Controls the six wheel base using the Y axis on the right joystick to control power
      * and the X axis on the left joystick to adjust the output in order to allow the robot
@@ -150,6 +159,21 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
+  }
+
+  if (controller.getButtonYDriver()){
+    if (vision.getdegRotationtoTarget()>0.0){
+      drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
+      drive.rightSideControl(vision.getdegRotationtoTarget()*.125);
+    }else if(vision.getdegRotationtoTarget()<0.0){
+      drive.rightSideControl(vision.getdegRotationtoTarget()*-.125);
+      drive.leftSideControl(vision.getdegRotationtoTarget()*.125);
+    }else{
+      drive.rightSideControl(0.0);
+      drive.leftSideControl(0.0);
+    }
+  }else{
+    //do nothing
   }
 }
   /**
