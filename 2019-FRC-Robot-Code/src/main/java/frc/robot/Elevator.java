@@ -87,7 +87,7 @@ public class Elevator {
 		/* set closed loop gains in slot0 - see documentation */
 		wrist.selectProfileSlot(0, 0);
 		wrist.config_kF(0, 0.15, kTimeoutMs);
-		wrist.config_kP(0, 1.0, kTimeoutMs);
+		wrist.config_kP(0, 0.8, kTimeoutMs);
 		wrist.config_kI(0, 0.001, kTimeoutMs);
 		wrist.config_kD(0, 2.0, kTimeoutMs);
 		/* set acceleration and cruise velocity - see documentation */

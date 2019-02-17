@@ -198,7 +198,7 @@ if (controller.getRightBumperDriver()){
   if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
     elevator.manualWristControl(controller.getYRightDriver());
   }else{
-    
+
   }
 
   if(controller.getButtonBCoDriver()){
@@ -336,106 +336,5 @@ if (controller.getRightBumperDriver()){
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
-
-
-//elevator code
-
-if(controller.getButtonADriver()){
-  position = Position.PANELLOW;
-}else if(controller.getButtonXCoDriver()){
-  position = Position.PANELMID;
-}else if(controller.getButtonBDriver()){
-  position = Position.PANELHIGH;
-}else if(controller.getButtonACoDriver()){
-  position = Position.CARGOLOW;
-}else if(controller.getDpadDriver()==90){
-  position = Position.CARGOMID;
-}else if(controller.getDpadDriver()==270){
-  position = Position.PANELHIGH;
-}else if(controller.getDpadDriver()==0){
-  position = Position.CARGOSHIP;
-}else if(controller.getRightTriggerDriver()>0.05){
-  position = Position.MANUALOVERRIDE;
-}else{
-  
-}
- switch(position){
-  case PANELLOW:
-  elevator.setElevatorPosition(100);
-  elevator.setWristPosition(100);
-  break;
-
-  case PANELMID:
-  elevator.setElevatorPosition(200);
-  elevator.setWristPosition(200);
-  break;
-
-  case PANELHIGH:
-  elevator.setElevatorPosition(300);
-  elevator.setWristPosition(300);
-  break;
-
-  case CARGOLOW:
-  elevator.setElevatorPosition(9344);
-  elevator.setWristPosition(744);
-  break;
-  
-  case CARGOMID:
-  elevator.setElevatorPosition(250);
-  elevator.setWristPosition(250);
-  break;
-
-  case CARGOHIGH:
-  elevator.setElevatorPosition(350);
-  elevator.setWristPosition(350);
-  break;
-
-  case CARGOSHIP:
-  elevator.setElevatorPosition(250);
-  elevator.setWristPosition(250);
-  break;
-
-  default:
-  
-  break;
-}
-
-if(controller.getYLeftCoDriver()>0.1){
-  position=Position.MANUALOVERRIDE;
-}
-
-if(elevator.getElevatorPosition() <= 100000){
-  if (controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
-  elevator.manualElevatorControl(controller.getLeftTriggerDriver() * (-.125));
-}else if(controller.getRightTriggerDriver() > controllerTriggerDeadzone){
-  elevator.manualElevatorControl(controller.getRightTriggerDriver());
-}else{
-  elevator.manualElevatorControl(0);
-}
-}else{
-
-}
-if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
-elevator.manualWristControl(controller.getYRightCoDriver());
-}else{
-elevator.manualWristControl(0.0);
-}
-
-if(controller.getStartButtonDriver()){
-  elevator.zero();
-}
-
-//intake
-if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
-  intake.leftIntakeControl(controller.getLeftTriggerCoDriver() * (-1));
-  intake.rightIntakeControl(controller.getLeftTriggerCoDriver());
-}else if(controller.getRightTriggerCoDriver() > controllerJoystickDeadzone){
-  intake.leftIntakeControl(controller.getRightTriggerCoDriver());
-  intake.rightIntakeControl(controller.getRightTriggerCoDriver() * (-1));
-}else{
-  intake.leftIntakeControl(0);
-  intake.rightIntakeControl(0);
-}
-
-}
+  }
 }
