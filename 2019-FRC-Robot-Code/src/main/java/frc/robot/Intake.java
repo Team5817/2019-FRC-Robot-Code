@@ -26,8 +26,8 @@ public class Intake {
     public TalonSRX leftIntake;
 
     public Intake(){
-        rightIntake = new TalonSRX(6);
-        leftIntake = new TalonSRX(7);
+        rightIntake = new TalonSRX(13);
+        leftIntake = new TalonSRX(14);
     }
 
     public void pullIn(double input){
@@ -45,7 +45,7 @@ public class Intake {
         leftIntake.set(ControlMode.PercentOutput, 0.0);
     }
     public void leftIntakeControl(double input){
-        rightIntake.set(ControlMode.PercentOutput, input);
+        leftIntake.set(ControlMode.PercentOutput, input);
 
     }
     public void rightIntakeControl(double input){

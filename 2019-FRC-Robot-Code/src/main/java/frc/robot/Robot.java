@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private Position position = Position.ZERO;
+  private Position position = Position.MANUALOVERRIDE;
 
   private Drive drive = Drive.getInstance();
   private Controller controller = Controller.getInstance();
@@ -54,6 +54,7 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void robotInit() {
+    elevator.motionMagic();
     CameraServer.getInstance().startAutomaticCapture();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
@@ -70,7 +71,14 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Wrist Position", elevator.getWristPosition());
+    SmartDashboard.putNumber("Elevator Velocity", elevator.maxVelocity());
+    SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
+    if(controller.getStartButtonCoDriver()){
+      elevator.zero();
+    }
   }
+
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
@@ -125,6 +133,7 @@ public class Robot extends IterativeRobot {
     /* Controls the six wheel base using the Y axis on the right joystick to control power
      * and the X axis on the left joystick to adjust the output in order to allow the robot
      * to turn */
+
 if (controller.getRightBumperDriver()){
   if (controller.getYLeftDriver() > controllerJoystickDeadzone){
     drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
@@ -162,7 +171,7 @@ if (controller.getRightBumperDriver()){
     }
   }
 
-  if (controller.getButtonYDriver()){
+ /* if (controller.getButtonYDriver()){
     if (vision.getdegRotationtoTarget()>0.0){
       drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
       drive.rightSideControl(vision.getdegRotationtoTarget()*.125);
@@ -175,6 +184,97 @@ if (controller.getRightBumperDriver()){
     }
   }else{
     //do nothing
+  }*/
+
+  if(controller.getButtonBCoDriver()){
+    position = Position.PANELLOW;
+  }else if(controller.getButtonXCoDriver()){
+    position = Position.PANELMID;
+  }else if(controller.getButtonYCoDriver()){
+    position = Position.PANELHIGH;
+  }else if(controller.getButtonBDriver()){
+    position = Position.CARGOLOW;
+  }else if(controller.getButtonXDriver()){
+    position = Position.CARGOMID;
+  }else if(controller.getButtonYDriver()){
+    position = Position.CARGOHIGH;
+  }else if(controller.getButtonYCoDriver()){
+    position = Position.CARGOSHIP;
+  }else if(controller.getButtonADriver()){
+    position = Position.INTAKE;
+  }else if(controller.getRightTriggerCoDriver()>0.05){
+    position = Position.MANUALOVERRIDE;
+  }else{
+    
+  }
+   switch(position){
+    case PANELLOW:
+    elevator.setElevatorPosition(100);
+    elevator.setWristPosition(100);
+    break;
+
+    case INTAKE:
+    elevator.setElevatorPosition(2100);
+    elevator.setWristPosition(1050);
+    break;
+  
+    case PANELMID:
+    elevator.setElevatorPosition(200);
+    elevator.setWristPosition(200);
+    break;
+  
+    case PANELHIGH:
+    elevator.setElevatorPosition(300);
+    elevator.setWristPosition(300);
+    break;
+  
+    case CARGOLOW:
+    elevator.setElevatorPosition(9344);
+    elevator.setWristPosition(744);
+    break;
+    
+    case CARGOMID:
+    elevator.setElevatorPosition(26080);
+    elevator.setWristPosition(744);
+    break;
+  
+    case CARGOHIGH:
+    elevator.setElevatorPosition(39935);
+    elevator.setWristPosition(744);
+    break;
+  
+    case CARGOSHIP:
+    elevator.setElevatorPosition(250);
+    elevator.setWristPosition(250);
+    break;
+
+    case MANUALOVERRIDE:
+    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() > controllerJoystickDeadzone){
+      elevator.manualElevatorControl(controller.getYLeftCoDriver());
+    }else{
+      elevator.manualElevatorControl(0);
+    }
+    if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
+      elevator.manualWristControl(controller.getYRightCoDriver());
+      }else{
+      elevator.manualWristControl(0.0);
+      }
+      break;
+  
+    default:
+    
+    break;
+  }
+  //intake code
+  if (controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+    intake.leftIntakeControl(0.50 * (-1));
+    intake.rightIntakeControl(0.50);
+  }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+    intake.leftIntakeControl(0.25);
+    intake.rightIntakeControl(0.25 * (-1));
+  }else{
+    intake.leftIntakeControl(0);
+    intake.rightIntakeControl(0);
   }
 }
   /**
@@ -225,7 +325,7 @@ if(controller.getButtonADriver()){
   position = Position.PANELMID;
 }else if(controller.getButtonBDriver()){
   position = Position.PANELHIGH;
-}else if(controller.getDpadDriver()==180){
+}else if(controller.getButtonACoDriver()){
   position = Position.CARGOLOW;
 }else if(controller.getDpadDriver()==90){
   position = Position.CARGOMID;
@@ -233,6 +333,10 @@ if(controller.getButtonADriver()){
   position = Position.PANELHIGH;
 }else if(controller.getDpadDriver()==0){
   position = Position.CARGOSHIP;
+}else if(controller.getRightTriggerDriver()>0.05){
+  position = Position.MANUALOVERRIDE;
+}else{
+  
 }
  switch(position){
   case PANELLOW:
@@ -251,8 +355,8 @@ if(controller.getButtonADriver()){
   break;
 
   case CARGOLOW:
-  elevator.setElevatorPosition(150);
-  elevator.setWristPosition(150);
+  elevator.setElevatorPosition(9344);
+  elevator.setWristPosition(744);
   break;
   
   case CARGOMID:
@@ -271,36 +375,41 @@ if(controller.getButtonADriver()){
   break;
 
   default:
-  elevator.setElevatorPosition(0);
-  elevator.setWristPosition(0);
+  
   break;
 }
 
-if (controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+if(controller.getYLeftCoDriver()>0.1){
+  position=Position.MANUALOVERRIDE;
+}
+
+if(elevator.getElevatorPosition() <= 100000){
+  if (controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
   elevator.manualElevatorControl(controller.getLeftTriggerDriver() * (-.125));
 }else if(controller.getRightTriggerDriver() > controllerTriggerDeadzone){
   elevator.manualElevatorControl(controller.getRightTriggerDriver());
 }else{
   elevator.manualElevatorControl(0);
 }
-
-if(controller.getLeftBumperDriver()){
-if(controller.getYRightDriver() > controllerJoystickDeadzone){
-elevator.manualWristControl(controller.getYRightDriver());
 }else{
 
 }
+if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
+elevator.manualWristControl(controller.getYRightCoDriver());
+}else{
+elevator.manualWristControl(0.0);
 }
 
 if(controller.getStartButtonDriver()){
   elevator.zero();
 }
+
 //intake
 if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
   intake.leftIntakeControl(controller.getLeftTriggerCoDriver() * (-1));
   intake.rightIntakeControl(controller.getLeftTriggerCoDriver());
 }else if(controller.getRightTriggerCoDriver() > controllerJoystickDeadzone){
-  intake.rightIntakeControl(controller.getRightTriggerCoDriver());
+  intake.leftIntakeControl(controller.getRightTriggerCoDriver());
   intake.rightIntakeControl(controller.getRightTriggerCoDriver() * (-1));
 }else{
   intake.leftIntakeControl(0);

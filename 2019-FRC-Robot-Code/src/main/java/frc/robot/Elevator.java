@@ -16,7 +16,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Elevator {
 
     /* Creates instance to prevent memory overflow during robot operation*/
-    private static Elevator instance_;
+	private static Elevator instance_;
+	int velocity=0;
 	
 	public static Elevator getInstance() {
 		if(instance_ == null) {
@@ -39,8 +40,7 @@ public class Elevator {
         elevatorMotorOne = new TalonSRX(9);
         elevatorMotorTwo = new TalonSRX(8);
         elevatorMotorThree = new TalonSRX(7);
-        motionMagic();
-         }
+    }
 
     public void motionMagic(){
         int kTimeoutMs=10;
@@ -60,39 +60,13 @@ public class Elevator {
 
 		/* set closed loop gains in slot0 - see documentation */
 		elevatorMotorOne.selectProfileSlot(0, 0);
-		elevatorMotorOne.config_kF(0, 0.5, kTimeoutMs);
-		elevatorMotorOne.config_kP(0, 1.25, kTimeoutMs);
-		elevatorMotorOne.config_kI(0, 0.0, kTimeoutMs);
-		elevatorMotorOne.config_kD(0, 15, kTimeoutMs);
+		elevatorMotorOne.config_kF(0, 0.2481, kTimeoutMs);
+		elevatorMotorOne.config_kP(0, 1.0, kTimeoutMs);
+		elevatorMotorOne.config_kI(0, 0.0001, kTimeoutMs);
+		elevatorMotorOne.config_kD(0, 1, kTimeoutMs);
 		/* set acceleration and cruise velocity - see documentation */
-		elevatorMotorOne.configMotionCruiseVelocity(4000, kTimeoutMs);
-		elevatorMotorOne.configMotionAcceleration(9000, kTimeoutMs);
-		/* zero the sensor */
-        elevatorMotorOne.setSelectedSensorPosition(0, 0, kTimeoutMs);
-        
-        elevatorMotorOne.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, kTimeoutMs);
-		elevatorMotorOne.setSensorPhase(true);
-		elevatorMotorOne.setInverted(false);
-
-		/* Set relevant frame periods to be at least as fast as periodic rate */
-		elevatorMotorOne.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
-		elevatorMotorOne.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
-
-		/* set the peak and nominal outputs */
-		elevatorMotorOne.configNominalOutputForward(0, kTimeoutMs);
-		elevatorMotorOne.configNominalOutputReverse(0, kTimeoutMs);
-		elevatorMotorOne.configPeakOutputForward(1, kTimeoutMs);
-		elevatorMotorOne.configPeakOutputReverse(-1, kTimeoutMs);
-
-		/* set closed loop gains in slot0 - see documentation */
-		elevatorMotorOne.selectProfileSlot(0, 0);
-		elevatorMotorOne.config_kF(0, 0.5, kTimeoutMs);
-		elevatorMotorOne.config_kP(0, 1.25, kTimeoutMs);
-		elevatorMotorOne.config_kI(0, 0.0, kTimeoutMs);
-		elevatorMotorOne.config_kD(0, 15, kTimeoutMs);
-		/* set acceleration and cruise velocity - see documentation */
-		elevatorMotorOne.configMotionCruiseVelocity(4000, kTimeoutMs);
-		elevatorMotorOne.configMotionAcceleration(9000, kTimeoutMs);
+		elevatorMotorOne.configMotionCruiseVelocity(5000, kTimeoutMs);
+		elevatorMotorOne.configMotionAcceleration(3500, kTimeoutMs);
 		/* zero the sensor */
         elevatorMotorOne.setSelectedSensorPosition(0, 0, kTimeoutMs);
         
@@ -112,16 +86,16 @@ public class Elevator {
 
 		/* set closed loop gains in slot0 - see documentation */
 		wrist.selectProfileSlot(0, 0);
-		wrist.config_kF(0, 0.5, kTimeoutMs);
-		wrist.config_kP(0, 1.25, kTimeoutMs);
-		wrist.config_kI(0, 0.0, kTimeoutMs);
-		wrist.config_kD(0, 15, kTimeoutMs);
+		wrist.config_kF(0, 0.15, kTimeoutMs);
+		wrist.config_kP(0, 1.0, kTimeoutMs);
+		wrist.config_kI(0, 0.001, kTimeoutMs);
+		wrist.config_kD(0, 2.0, kTimeoutMs);
 		/* set acceleration and cruise velocity - see documentation */
-		wrist.configMotionCruiseVelocity(4000, kTimeoutMs);
-		wrist.configMotionAcceleration(9000, kTimeoutMs);
+		wrist.configMotionCruiseVelocity(3000, kTimeoutMs);
+		wrist.configMotionAcceleration(1000, kTimeoutMs);
 		/* zero the sensor */
 		wrist.setSelectedSensorPosition(0, 0, kTimeoutMs);
-    }
+	}
 
     /* Methods which control the outputs to the motors */
     /* The follower method causes the talons to follow the output of the master talon assigned in parenthases */
@@ -149,8 +123,18 @@ public class Elevator {
         elevatorMotorOne.set(ControlMode.MotionMagic, value);
         }
     public void setWristPosition(int value){
+		System.out.println(value);
         wrist.set(ControlMode.MotionMagic, value);
-        }
+		}
+	public int maxVelocity(){
+		if (elevatorMotorOne.getSelectedSensorVelocity()> velocity){
+			velocity= elevatorMotorOne.getSelectedSensorVelocity();
+		}else{
+			velocity=velocity;
+		}
+		return velocity;
+
+	}
         
 }
 
