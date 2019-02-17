@@ -29,17 +29,18 @@ public class Elevator {
     TalonSRX elevatorMotorOne;
     TalonSRX elevatorMotorTwo;
     TalonSRX elevatorMotorThree;
+    TalonSRX wrist;
 
 
     /* Elevator method assigns a object of the Talon Class for each physical Talon SRX used*/
     public Elevator(){
 
+        wrist = new TalonSRX(10);
         elevatorMotorOne = new TalonSRX(9);
         elevatorMotorTwo = new TalonSRX(8);
         elevatorMotorThree = new TalonSRX(7);
         motionMagic();
-        
-    }
+         }
 
     public void motionMagic(){
         int kTimeoutMs=10;
@@ -67,7 +68,59 @@ public class Elevator {
 		elevatorMotorOne.configMotionCruiseVelocity(4000, kTimeoutMs);
 		elevatorMotorOne.configMotionAcceleration(9000, kTimeoutMs);
 		/* zero the sensor */
-		elevatorMotorOne.setSelectedSensorPosition(0, 0, kTimeoutMs);
+        elevatorMotorOne.setSelectedSensorPosition(0, 0, kTimeoutMs);
+        
+        elevatorMotorOne.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, kTimeoutMs);
+		elevatorMotorOne.setSensorPhase(true);
+		elevatorMotorOne.setInverted(false);
+
+		/* Set relevant frame periods to be at least as fast as periodic rate */
+		elevatorMotorOne.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
+		elevatorMotorOne.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
+
+		/* set the peak and nominal outputs */
+		elevatorMotorOne.configNominalOutputForward(0, kTimeoutMs);
+		elevatorMotorOne.configNominalOutputReverse(0, kTimeoutMs);
+		elevatorMotorOne.configPeakOutputForward(1, kTimeoutMs);
+		elevatorMotorOne.configPeakOutputReverse(-1, kTimeoutMs);
+
+		/* set closed loop gains in slot0 - see documentation */
+		elevatorMotorOne.selectProfileSlot(0, 0);
+		elevatorMotorOne.config_kF(0, 0.5, kTimeoutMs);
+		elevatorMotorOne.config_kP(0, 1.25, kTimeoutMs);
+		elevatorMotorOne.config_kI(0, 0.0, kTimeoutMs);
+		elevatorMotorOne.config_kD(0, 15, kTimeoutMs);
+		/* set acceleration and cruise velocity - see documentation */
+		elevatorMotorOne.configMotionCruiseVelocity(4000, kTimeoutMs);
+		elevatorMotorOne.configMotionAcceleration(9000, kTimeoutMs);
+		/* zero the sensor */
+        elevatorMotorOne.setSelectedSensorPosition(0, 0, kTimeoutMs);
+        
+        wrist.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, kTimeoutMs);
+		wrist.setSensorPhase(true);
+		wrist.setInverted(false);
+
+		/* Set relevant frame periods to be at least as fast as periodic rate */
+		wrist.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
+		wrist.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
+
+		/* set the peak and nominal outputs */
+		wrist.configNominalOutputForward(0, kTimeoutMs);
+		wrist.configNominalOutputReverse(0, kTimeoutMs);
+		wrist.configPeakOutputForward(1, kTimeoutMs);
+		wrist.configPeakOutputReverse(-1, kTimeoutMs);
+
+		/* set closed loop gains in slot0 - see documentation */
+		wrist.selectProfileSlot(0, 0);
+		wrist.config_kF(0, 0.5, kTimeoutMs);
+		wrist.config_kP(0, 1.25, kTimeoutMs);
+		wrist.config_kI(0, 0.0, kTimeoutMs);
+		wrist.config_kD(0, 15, kTimeoutMs);
+		/* set acceleration and cruise velocity - see documentation */
+		wrist.configMotionCruiseVelocity(4000, kTimeoutMs);
+		wrist.configMotionAcceleration(9000, kTimeoutMs);
+		/* zero the sensor */
+		wrist.setSelectedSensorPosition(0, 0, kTimeoutMs);
     }
 
     /* Methods which control the outputs to the motors */
@@ -77,18 +130,27 @@ public class Elevator {
         elevatorMotorTwo.follow(elevatorMotorOne);
         elevatorMotorOne.set(ControlMode.PercentOutput, input);
     }
+    public void manualWristControl(double input){
+        wrist.set(ControlMode.PercentOutput, input);
+    }
     public int getElevatorPosition(){
         return elevatorMotorOne.getSelectedSensorPosition(0);
     }
+    public int getWristPosition(){
+        return wrist.getSelectedSensorPosition(0);
+    }
         public void zero(){
             elevatorMotorOne.setSelectedSensorPosition(0, 0, 10);
+            wrist.setSelectedSensorPosition(0, 0, 10);
     }
     public void setElevatorPosition(int value){
         elevatorMotorThree.follow(elevatorMotorOne);
         elevatorMotorTwo.follow(elevatorMotorOne);
         elevatorMotorOne.set(ControlMode.MotionMagic, value);
         }
-    
+    public void setWristPosition(int value){
+        wrist.set(ControlMode.MotionMagic, value);
+        }
         
 }
 

@@ -30,6 +30,8 @@ public class Drive {
     TalonSRX leftDriveOne;
     TalonSRX leftDriveTwo;
     TalonSRX leftDriveThree;
+    TalonSRX clawRight;
+    TalonSRX clawLeft;
 
     /* Drive method assigns a object of the Talon Class for each physical Talon SRX used*/
     public Drive(){
@@ -40,6 +42,9 @@ public class Drive {
         leftDriveOne = new TalonSRX(3);
         leftDriveTwo = new TalonSRX(4);
         leftDriveThree = new TalonSRX(5);
+        clawRight = new TalonSRX(11);
+        clawLeft = new TalonSRX(12);
+
     }
 
     /* Methods which control the outputs to the motors */
@@ -54,6 +59,11 @@ public class Drive {
         leftDriveThree.follow(leftDriveOne);
         leftDriveTwo.follow(leftDriveOne);
         leftDriveOne.set(ControlMode.PercentOutput, input);
+    }
+
+    public void clawControl(double input){
+        clawLeft.follow(clawRight);
+        clawRight.set(ControlMode.PercentOutput, input);
     }
 
 
