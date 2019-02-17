@@ -197,6 +197,8 @@ if (controller.getRightBumperDriver()){
 
   if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
     elevator.manualWristControl(controller.getYRightDriver());
+  }else{
+    
   }
 
   if(controller.getButtonBCoDriver()){
