@@ -201,12 +201,18 @@ if (controller.getRightBumperDriver()){
 
   }
 
-  if(controller.getButtonBCoDriver()){
+  if(controller.getDpadDriver() == 270){
+  position = Position.ZERO;
+
+  }else if(controller.getDpadDriver() == 180){
     position = Position.PANELLOW;
-  }else if(controller.getButtonXCoDriver()){
+  }else if(controller.getDpadDriver() == 90){
     position = Position.PANELMID;
-  }else if(controller.getButtonYCoDriver()){
+  }else if(controller.getDpadDriver() == 0){
     position = Position.PANELHIGH;
+ 
+  }else if(controller.getButtonADriver()){
+    position = Position.INTAKE;
   }else if(controller.getButtonBDriver()){
     position = Position.CARGOLOW;
   }else if(controller.getButtonXDriver()){
@@ -215,12 +221,10 @@ if (controller.getRightBumperDriver()){
     position = Position.CARGOHIGH;
   }else if(controller.getButtonYCoDriver()){
     position = Position.CARGOSHIP;
-  }else if(controller.getButtonADriver()){
-    position = Position.INTAKE;
+
   }else if(controller.getRightTriggerCoDriver()>0.05){
     position = Position.MANUALOVERRIDE;
-  }else if(controller.getBackButtonDriver()){
-    position = Position.ZERO;
+
   }else{
 
   }
