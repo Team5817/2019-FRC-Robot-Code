@@ -204,8 +204,10 @@ if (controller.getRightBumperDriver()){
     position = Position.INTAKE;
   }else if(controller.getRightTriggerCoDriver()>0.05){
     position = Position.MANUALOVERRIDE;
+  }else if(controller.getBackButtonDriver()){
+    position = Position.ZERO;
   }else{
-    
+
   }
    switch(position){
     case PANELLOW:
