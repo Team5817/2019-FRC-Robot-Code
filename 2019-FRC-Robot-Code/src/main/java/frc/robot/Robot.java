@@ -189,6 +189,16 @@ if (controller.getRightBumperDriver()){
     //do nothing
   }*/
 
+  if(controller.getLeftBumperDriver() && (controller.getYLeftDriver() > controllerJoystickDeadzone || controller.getYLeftDriver() < controllerJoystickDeadzone)){
+    elevator.manualElevatorControl(controller.getYLeftDriver());
+  }else{
+
+  }
+
+  if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
+    elevator.manualWristControl(controller.getYRightDriver());
+  }
+
   if(controller.getButtonBCoDriver()){
     position = Position.PANELLOW;
   }else if(controller.getButtonXCoDriver()){
@@ -258,7 +268,7 @@ if (controller.getRightBumperDriver()){
     elevator.setWristPosition(50);
 
     case MANUALOVERRIDE:
-    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() <-1 * controllerJoystickDeadzone){
+    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone){
       elevator.manualElevatorControl(controller.getYLeftCoDriver());
     }else{
       elevator.manualElevatorControl(0);
