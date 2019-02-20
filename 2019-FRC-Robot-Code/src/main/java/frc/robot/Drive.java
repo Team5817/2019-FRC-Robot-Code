@@ -61,23 +61,20 @@ public class Drive {
         leftDriveOne.set(ControlMode.PercentOutput, input);
     }
 
+    // Controls the climbing claws with a single input
     public void clawControl(double input){
         clawLeft.follow(clawRight);
         clawRight.set(ControlMode.PercentOutput, input);
     }
 
+    // Returns the velocity of the right and left drive
+    public int getRightDriveVelocity(){
+        return rightDriveOne.getSelectedSensorVelocity(0);
+    }
 
-public int getRightDriveVelocity(){
-    return rightDriveOne.getSelectedSensorVelocity(0);
-}
-
-public int getLeftDriveVelocity(){
-    return leftDriveTwo.getSelectedSensorVelocity(0);
-}
-
-
-
-
+    public int getLeftDriveVelocity(){
+        return leftDriveTwo.getSelectedSensorVelocity(0);
+    }
 }
 
 

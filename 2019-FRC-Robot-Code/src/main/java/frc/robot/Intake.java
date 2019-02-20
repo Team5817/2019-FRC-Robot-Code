@@ -8,11 +8,11 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-/**
- * Add your docs here.
- */
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 public class Intake {
+
+    // Method which prevents memory overflow
     private static Intake instance_;
 	
 	public static Intake getInstance() {
@@ -30,29 +30,17 @@ public class Intake {
         leftIntake = new TalonSRX(14);
     }
 
-    public void pullIn(double input){
-        rightIntake.set(ControlMode.PercentOutput, input * -1);
-        leftIntake.set(ControlMode.PercentOutput, input * -1);
-    }
-
-    public void pushOut(double input){
-        rightIntake.set(ControlMode.PercentOutput, input);
-        leftIntake.set(ControlMode.PercentOutput, input);
-    }
-
+    // Methods which control the direction and power with which the intake wheels spin
     public void stop(){
         rightIntake.set(ControlMode.PercentOutput, 0.0);
         leftIntake.set(ControlMode.PercentOutput, 0.0);
     }
+
     public void leftIntakeControl(double input){
         leftIntake.set(ControlMode.PercentOutput, input);
-
     }
+
     public void rightIntakeControl(double input){
         rightIntake.set(ControlMode.PercentOutput, input);
-
-    }
-
-        
-    
+    }   
 }

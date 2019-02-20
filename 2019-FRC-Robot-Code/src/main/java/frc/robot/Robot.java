@@ -26,7 +26,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * project.
  * hello world
  */
+
 public class Robot extends IterativeRobot {
+
   /**
    *
    */
@@ -37,7 +39,6 @@ public class Robot extends IterativeRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Position position = Position.MANUALOVERRIDE;
-
   private Drive drive = Drive.getInstance();
   private Controller controller = Controller.getInstance();
   private Intake intake = Intake.getInstance();
@@ -52,6 +53,7 @@ public class Robot extends IterativeRobot {
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
+
   @Override
   public void robotInit() {
     elevator.motionMagic();
@@ -69,6 +71,7 @@ public class Robot extends IterativeRobot {
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
+
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Wrist Position", elevator.getWristPosition());
@@ -84,7 +87,6 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
   }
 
-
   /**
    * This autonomous (along with the chooser code above) shows how to select
    * between different autonomous modes using the dashboard. The sendable
@@ -96,6 +98,7 @@ public class Robot extends IterativeRobot {
    * the switch structure below with additional strings. If using the
    * SendableChooser make sure to add them to the chooser code above as well.
    */
+
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
@@ -107,6 +110,7 @@ public class Robot extends IterativeRobot {
   /**
    * This function is called periodically during autonomous.
    */
+
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
@@ -123,96 +127,87 @@ public class Robot extends IterativeRobot {
   /**
    * This function is called periodically during operator control.
    */
+
   @Override
   public void teleopPeriodic() {
 
-    /* Controls the six wheel base using the Y axis on the right joystick to control power
-     * and the X axis on the left joystick to adjust the output in order to allow the robot
-     * to turn */
-
-
+    /*
+     * Controls the six wheel base using the Y axis on the right joystick to control power  *
+     * and the X axis on the left joystick to adjust the output in order to allow the robot *
+     * to turn
+     */
     
-     if (controller.getYLeftDriver() > controllerJoystickDeadzone){
+    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
       drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
-    
     }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
       drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
-    
     }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
-        drive.rightSideControl(controller.getXRightDriver()*(-1));
-        drive.leftSideControl(controller.getXRightDriver());
-
-      }else {
-        drive.rightSideControl(0);
-        drive.leftSideControl(0);
-      }
-
-    
-    if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
-      drive.clawControl(controller.getRightTriggerDriver());
-    }else if(controller.getLeftBumperDriver() && controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
-      drive.clawControl(controller.getLeftTriggerDriver() * (-1));
-    }else{
-      drive.clawControl(0);
+      drive.rightSideControl(controller.getXRightDriver()*(-1));
+      drive.leftSideControl(controller.getXRightDriver());
+    }else {
+      drive.rightSideControl(0);
+      drive.leftSideControl(0);
     }
- /* if (controller.getButtonYDriver()){
-    if (vision.getdegRotationtoTarget()>0.0){
-      drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
-      drive.rightSideControl(vision.getdegRotationtoTarget()*.125);
-    }else if(vision.getdegRotationtoTarget()<0.0){
-      drive.rightSideControl(vision.getdegRotationtoTarget()*-.125);
-      drive.leftSideControl(vision.getdegRotationtoTarget()*.125);
+
+    /*
+    * Controls the elevator manually based on the input from the    *
+    * codriver controller. The left joystick controls the elevator  *
+    * input and the right joystick controls the wrist manually      *
+    */
+
+    if(controller.getLeftBumperDriver() && (controller.getYLeftDriver() > controllerJoystickDeadzone || controller.getYLeftDriver() < controllerJoystickDeadzone)){
+      elevator.manualElevatorControl(controller.getYLeftDriver() * -1);
     }else{
-      drive.rightSideControl(0.0);
-      drive.leftSideControl(0.0);
+      elevator.manualElevatorControl(0.0);
     }
-  }else{
-    //do nothing
-  }*/
+    if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
+      elevator.manualWristControl(controller.getYRightDriver());
+    }else{
+      elevator.manualWristControl(0.0);
+    }
 
-  if(controller.getLeftBumperDriver() && (controller.getYLeftDriver() > controllerJoystickDeadzone || controller.getYLeftDriver() < controllerJoystickDeadzone)){
-    elevator.manualElevatorControl(controller.getYLeftDriver());
-  }else{
+    /*
+    * Changes the state of the vartiable 'position' which adjusts   *
+    * the height of the elevator based on the positions of the      *
+    * switch statement below                                        *
+    */
 
-  }
-
-  if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
-    elevator.manualWristControl(controller.getYRightDriver());
-  }else{
-
-  }
-
-  if(controller.getDpadDriver() == 270){
-  position = Position.ZERO;
-
-  }else if(controller.getDpadDriver() == 180){
-    position = Position.PANELLOW;
-  }else if(controller.getDpadDriver() == 90){
-    position = Position.PANELMID;
-  }else if(controller.getDpadDriver() == 0){
-    position = Position.PANELHIGH;
- 
-  }else if(controller.getButtonADriver()){
-    position = Position.INTAKE;
-  }else if(controller.getButtonBDriver()){
-    position = Position.CARGOLOW;
-  }else if(controller.getButtonXDriver()){
-    position = Position.CARGOMID;
-  }else if(controller.getButtonYDriver()){
-    position = Position.CARGOHIGH;
-  }else if(controller.getButtonYCoDriver()){
-    position = Position.CARGOSHIP;
-
-  }else if(controller.getRightTriggerCoDriver()>0.05){
-    position = Position.MANUALOVERRIDE;
-  }else if(controller.getDpadDriver()==180|| controller.getRightBumperDriver()){
+    if(controller.getDpadDriver() == 270){
     position = Position.ZERO;
-  }else{
+    }else if(controller.getDpadDriver() == 180){
+      position = Position.PANELLOW;
+    }else if(controller.getDpadDriver() == 90){
+      position = Position.PANELMID;
+    }else if(controller.getDpadDriver() == 0){
+      position = Position.PANELHIGH;
+    }else if(controller.getButtonADriver()){
+      position = Position.INTAKE;
+    }else if(controller.getButtonBDriver()){
+      position = Position.CARGOLOW;
+    }else if(controller.getButtonXDriver()){
+      position = Position.CARGOMID;
+    }else if(controller.getButtonYDriver()){
+      position = Position.CARGOHIGH;
+    }else if(controller.getButtonYCoDriver()){
+      position = Position.CARGOSHIP;
+    }else if(controller.getRightTriggerCoDriver()>0.05){
+      position = Position.MANUALOVERRIDE;
+    }else if(controller.getRightBumperDriver()){
+      position = Position.ZERO;
+    }else{
+      // does not change state if no button is pressed
+    }
 
-  }
-   switch(position){
+    /*
+    * switch statment switches the elevator position based on the state of the variable     *
+    * 'position' which is determined by the if/else statement above by setting the variable *
+    * and continuously checking it the robot is able to hold its position until the state   *
+    * is changed by pressing a different button
+    */
+
+  switch(position){
     case PANELLOW:
     elevator.setElevatorPosition(100);
     elevator.setWristPosition(100);
@@ -222,32 +217,32 @@ public class Robot extends IterativeRobot {
     elevator.setElevatorPosition(2100);
     elevator.setWristPosition(1050);
     break;
-  
+    
     case PANELMID:
     elevator.setElevatorPosition(200);
     elevator.setWristPosition(200);
     break;
-  
+    
     case PANELHIGH:
     elevator.setElevatorPosition(300);
     elevator.setWristPosition(300);
     break;
-  
+    
     case CARGOLOW:
     elevator.setElevatorPosition(9344);
     elevator.setWristPosition(744);
     break;
-    
+      
     case CARGOMID:
     elevator.setElevatorPosition(26080);
     elevator.setWristPosition(744);
     break;
-  
+    
     case CARGOHIGH:
     elevator.setElevatorPosition(36000);
     elevator.setWristPosition(744);
     break;
-  
+    
     case CARGOSHIP:
     elevator.setElevatorPosition(250);
     elevator.setWristPosition(250);
@@ -265,64 +260,64 @@ public class Robot extends IterativeRobot {
     }
     if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
       elevator.manualWristControl(controller.getYRightCoDriver());
-      }else{
+    }else{
       elevator.manualWristControl(0.0);
-      }
-      break;
-  
-    default:
-    
+    }
     break;
+    
+    default:
+      //do nothing
+    break;
+    }
+    /*
+    * The left trigger on the driver controller pulls in
+    * The right trigger on the driver controller pushes out
+    */
+    if (controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+      intake.leftIntakeControl(0.75 * (-1));
+      intake.rightIntakeControl(0.75);
+    }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+      intake.leftIntakeControl(0.75);
+      intake.rightIntakeControl(0.75 * (-1));
+    }else{
+      intake.leftIntakeControl(0);
+      intake.rightIntakeControl(0);
+    }
   }
-  //intake code
-  if (controller.getRightTriggerDriver() > controllerTriggerDeadzone){
-    intake.leftIntakeControl(0.75 * (-1));
-    intake.rightIntakeControl(0.75);
-  }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
-    intake.leftIntakeControl(0.75);
-    intake.rightIntakeControl(0.75 * (-1));
-  }else{
-    intake.leftIntakeControl(0);
-    intake.rightIntakeControl(0);
-  }
-}
   /**
    * This function is called periodically during test mode.
    */
   @Override
   public void testPeriodic() {
 
-//displays to smart dashboard
-    SmartDashboard.putNumber("Left Drive Velocity", drive.getLeftDriveVelocity());
-    SmartDashboard.putNumber("Right Drive Velocity", drive.getRightDriveVelocity());
+    /*
+    * Controls the drive system of the robot based on the output of the 
+    * Limelight positioning software
+    */
 
-    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
-    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
-    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
-
-    SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
-
-    if(controller.getLeftJoystickPressDriver() && controller.getRightJoystickPressDriver()){
-      SmartDashboard.putNumber("Lucky Number 5", 5);
+    if (controller.getButtonYDriver()){
+      if (vision.getdegRotationtoTarget()>0.0){
+        drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
+        drive.rightSideControl(vision.getdegRotationtoTarget()*.125);
+      }else if(vision.getdegRotationtoTarget()<0.0){
+        drive.rightSideControl(vision.getdegRotationtoTarget()*-.125);
+        drive.leftSideControl(vision.getdegRotationtoTarget()*.125);
+      }else{
+        drive.rightSideControl(0.0);
+        drive.leftSideControl(0.0);
+      }
+    }else{
+      //do nothing
     }
+    
+    // controls the claws with the bumpers
 
-    
-    //drive code using velocity
-    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-    
-    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-      drive.rightSideControl(drive.getLeftDriveVelocity() - (controller.getXRightDriver()*0.5));
-      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.5));
-    
-    }else if(controller.getXRightDriver() > controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
-        drive.rightSideControl(controller.getXRightDriver()*(-1));
-        drive.leftSideControl(controller.getXRightDriver());
-
-      }else {
-        drive.rightSideControl(0);
-        drive.leftSideControl(0);
+    if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+      drive.clawControl(controller.getRightTriggerDriver());
+    }else if(controller.getLeftBumperDriver() && controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+      drive.clawControl(controller.getLeftTriggerDriver() * (-1));
+    }else{
+      drive.clawControl(0);
     }
   }
 }
