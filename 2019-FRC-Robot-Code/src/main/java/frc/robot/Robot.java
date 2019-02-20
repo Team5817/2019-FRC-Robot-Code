@@ -77,6 +77,11 @@ public class Robot extends IterativeRobot {
     if(controller.getStartButtonCoDriver()){
       elevator.zero();
     }
+    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
+    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
+    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
+    SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
+    SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
   }
 
 
@@ -121,15 +126,6 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
 
-    //gyro displays to smartdashboard
-    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
-    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
-    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
-    SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
-    SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
-    
-    
-
     /* Controls the six wheel base using the Y axis on the right joystick to control power
      * and the X axis on the left joystick to adjust the output in order to allow the robot
      * to turn */
@@ -153,6 +149,16 @@ public class Robot extends IterativeRobot {
         drive.leftSideControl(0);
       }
 
+    }
+    if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+      drive.clawControl(controller.getRightTriggerDriver());
+    }else if(controller.getLeftBumperDriver() && controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+      drive.clawControl(controller.getLeftTriggerDriver() * (-1));
+    }else{
+      drive.clawControl(0);
+    }
+  }
+
  /* if (controller.getButtonYDriver()){
     if (vision.getdegRotationtoTarget()>0.0){
       drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
@@ -168,12 +174,30 @@ public class Robot extends IterativeRobot {
     //do nothing
   }*/
 
-  if(controller.getButtonBCoDriver()){
+  if(controller.getLeftBumperDriver() && (controller.getYLeftDriver() > controllerJoystickDeadzone || controller.getYLeftDriver() < controllerJoystickDeadzone)){
+    elevator.manualElevatorControl(controller.getYLeftDriver());
+  }else{
+
+  }
+
+  if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
+    elevator.manualWristControl(controller.getYRightDriver());
+  }else{
+
+  }
+
+  if(controller.getDpadDriver() == 270){
+  position = Position.ZERO;
+
+  }else if(controller.getDpadDriver() == 180){
     position = Position.PANELLOW;
-  }else if(controller.getButtonXCoDriver()){
+  }else if(controller.getDpadDriver() == 90){
     position = Position.PANELMID;
-  }else if(controller.getButtonYCoDriver()){
+  }else if(controller.getDpadDriver() == 0){
     position = Position.PANELHIGH;
+ 
+  }else if(controller.getButtonADriver()){
+    position = Position.INTAKE;
   }else if(controller.getButtonBDriver()){
     position = Position.CARGOLOW;
   }else if(controller.getButtonXDriver()){
@@ -182,14 +206,13 @@ public class Robot extends IterativeRobot {
     position = Position.CARGOHIGH;
   }else if(controller.getButtonYCoDriver()){
     position = Position.CARGOSHIP;
-  }else if(controller.getButtonADriver()){
-    position = Position.INTAKE;
+
   }else if(controller.getRightTriggerCoDriver()>0.05){
     position = Position.MANUALOVERRIDE;
   }else if(controller.getDpadDriver()==180|| controller.getRightBumperDriver()){
     position = Position.ZERO;
   }else{
-    
+
   }
    switch(position){
     case PANELLOW:
@@ -237,7 +260,7 @@ public class Robot extends IterativeRobot {
     elevator.setWristPosition(50);
 
     case MANUALOVERRIDE:
-    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() <-1 * controllerJoystickDeadzone){
+    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone){
       elevator.manualElevatorControl(controller.getYLeftCoDriver());
     }else{
       elevator.manualElevatorControl(0);
@@ -303,106 +326,5 @@ public class Robot extends IterativeRobot {
         drive.rightSideControl(0);
         drive.leftSideControl(0);
     }
-
-
-//elevator code
-
-if(controller.getButtonADriver()){
-  position = Position.PANELLOW;
-}else if(controller.getButtonXCoDriver()){
-  position = Position.PANELMID;
-}else if(controller.getButtonBDriver()){
-  position = Position.PANELHIGH;
-}else if(controller.getButtonACoDriver()){
-  position = Position.CARGOLOW;
-}else if(controller.getDpadDriver()==90){
-  position = Position.CARGOMID;
-}else if(controller.getDpadDriver()==270){
-  position = Position.PANELHIGH;
-}else if(controller.getDpadDriver()==0){
-  position = Position.CARGOSHIP;
-}else if(controller.getRightTriggerDriver()>0.05){
-  position = Position.MANUALOVERRIDE;
-}else{
-  
-}
- switch(position){
-  case PANELLOW:
-  elevator.setElevatorPosition(100);
-  elevator.setWristPosition(100);
-  break;
-
-  case PANELMID:
-  elevator.setElevatorPosition(200);
-  elevator.setWristPosition(200);
-  break;
-
-  case PANELHIGH:
-  elevator.setElevatorPosition(300);
-  elevator.setWristPosition(300);
-  break;
-
-  case CARGOLOW:
-  elevator.setElevatorPosition(9344);
-  elevator.setWristPosition(744);
-  break;
-  
-  case CARGOMID:
-  elevator.setElevatorPosition(250);
-  elevator.setWristPosition(250);
-  break;
-
-  case CARGOHIGH:
-  elevator.setElevatorPosition(350);
-  elevator.setWristPosition(350);
-  break;
-
-  case CARGOSHIP:
-  elevator.setElevatorPosition(250);
-  elevator.setWristPosition(250);
-  break;
-
-  default:
-  
-  break;
-}
-
-if(controller.getYLeftCoDriver()>0.1){
-  position=Position.MANUALOVERRIDE;
-}
-
-if(elevator.getElevatorPosition() <= 100000){
-  if (controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
-  elevator.manualElevatorControl(controller.getLeftTriggerDriver() * (-.125));
-}else if(controller.getRightTriggerDriver() > controllerTriggerDeadzone){
-  elevator.manualElevatorControl(controller.getRightTriggerDriver());
-}else{
-  elevator.manualElevatorControl(0);
-}
-}else{
-
-}
-if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
-elevator.manualWristControl(controller.getYRightCoDriver());
-}else{
-elevator.manualWristControl(0.0);
-}
-
-if(controller.getStartButtonDriver()){
-  elevator.zero();
-}
-
-//intake
-if (controller.getLeftTriggerCoDriver() > controllerJoystickDeadzone){
-  intake.leftIntakeControl(controller.getLeftTriggerCoDriver() * (-1));
-  intake.rightIntakeControl(controller.getLeftTriggerCoDriver());
-}else if(controller.getRightTriggerCoDriver() > controllerJoystickDeadzone){
-  intake.leftIntakeControl(controller.getRightTriggerCoDriver());
-  intake.rightIntakeControl(controller.getRightTriggerCoDriver() * (-1));
-}else{
-  intake.leftIntakeControl(0);
-  intake.rightIntakeControl(0);
-}
-
-}
+  }
 }
