@@ -8,7 +8,8 @@
 package frc.robot;
 
 /**
- * Add your docs here.
+ * Enumeration used to create empty variables which can
+ * be used to define the positions of the elevator and wrist
  */
 public enum Position {
     MANUALOVERRIDE, INTAKE, ZERO, PANELLOW, PANELMID, PANELHIGH, CARGOLOW, CARGOMID, CARGOHIGH, CARGOSHIP;

@@ -16,13 +16,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 
 
-/**
- * 
- * 
- * Add your docs here.
- */
-
-
 public class Vision {
 	 private static Vision instance_;
 	public static Vision getInstance() {
