@@ -149,7 +149,7 @@ public class Robot extends IterativeRobot {
         drive.leftSideControl(0);
       }
 
-    }
+    
     if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
       drive.clawControl(controller.getRightTriggerDriver());
     }else if(controller.getLeftBumperDriver() && controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
@@ -157,8 +157,6 @@ public class Robot extends IterativeRobot {
     }else{
       drive.clawControl(0);
     }
-  }
-
  /* if (controller.getButtonYDriver()){
     if (vision.getdegRotationtoTarget()>0.0){
       drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
