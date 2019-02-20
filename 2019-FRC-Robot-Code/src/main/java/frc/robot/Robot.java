@@ -134,24 +134,7 @@ public class Robot extends IterativeRobot {
      * and the X axis on the left joystick to adjust the output in order to allow the robot
      * to turn */
 
-if (controller.getRightBumperDriver()){
-  if (controller.getYLeftDriver() > controllerJoystickDeadzone){
-    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
-    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
-  
-  }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
-    drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.001));
-    drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.001));
-  
-  }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
-      drive.rightSideControl(controller.getXRightDriver()*(-1));
-      drive.leftSideControl(controller.getXRightDriver());
 
-    }else {
-      drive.rightSideControl(0);
-      drive.leftSideControl(0);
-    }
-}else{
     
      if (controller.getYLeftDriver() > controllerJoystickDeadzone){
       drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
@@ -161,15 +144,14 @@ if (controller.getRightBumperDriver()){
       drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
       drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
     
-    }else if(controller.getXRightDriver() > controllerJoystickDeadzone *(-1) || controller .getXRightDriver() < controllerJoystickDeadzone){
+    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
         drive.rightSideControl(controller.getXRightDriver()*(-1));
         drive.leftSideControl(controller.getXRightDriver());
 
       }else {
         drive.rightSideControl(0);
         drive.leftSideControl(0);
-    }
-  }
+      }
 
  /* if (controller.getButtonYDriver()){
     if (vision.getdegRotationtoTarget()>0.0){
@@ -204,6 +186,8 @@ if (controller.getRightBumperDriver()){
     position = Position.INTAKE;
   }else if(controller.getRightTriggerCoDriver()>0.05){
     position = Position.MANUALOVERRIDE;
+  }else if(controller.getDpadDriver()==180|| controller.getRightBumperDriver()){
+    position = Position.ZERO;
   }else{
     
   }
@@ -239,7 +223,7 @@ if (controller.getRightBumperDriver()){
     break;
   
     case CARGOHIGH:
-    elevator.setElevatorPosition(39935);
+    elevator.setElevatorPosition(36000);
     elevator.setWristPosition(744);
     break;
   
@@ -271,11 +255,11 @@ if (controller.getRightBumperDriver()){
   }
   //intake code
   if (controller.getRightTriggerDriver() > controllerTriggerDeadzone){
-    intake.leftIntakeControl(0.50 * (-1));
-    intake.rightIntakeControl(0.50);
+    intake.leftIntakeControl(0.75 * (-1));
+    intake.rightIntakeControl(0.75);
   }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
-    intake.leftIntakeControl(0.25);
-    intake.rightIntakeControl(0.25 * (-1));
+    intake.leftIntakeControl(0.75);
+    intake.rightIntakeControl(0.75 * (-1));
   }else{
     intake.leftIntakeControl(0);
     intake.rightIntakeControl(0);

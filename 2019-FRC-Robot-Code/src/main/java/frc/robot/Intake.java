@@ -31,13 +31,13 @@ public class Intake {
     }
 
     public void pullIn(double input){
-        rightIntake.set(ControlMode.PercentOutput, input);
-        leftIntake.set(ControlMode.PercentOutput, input);
+        rightIntake.set(ControlMode.PercentOutput, input * -1);
+        leftIntake.set(ControlMode.PercentOutput, input * -1);
     }
 
     public void pushOut(double input){
-        rightIntake.set(ControlMode.PercentOutput, input* -1);
-        leftIntake.set(ControlMode.PercentOutput, input * -1);
+        rightIntake.set(ControlMode.PercentOutput, input);
+        leftIntake.set(ControlMode.PercentOutput, input);
     }
 
     public void stop(){
