@@ -39,7 +39,8 @@ public class Elevator {
         wrist = new TalonSRX(10);
         elevatorMotorOne = new TalonSRX(9);
         elevatorMotorTwo = new TalonSRX(8);
-        elevatorMotorThree = new TalonSRX(7);
+		elevatorMotorThree = new TalonSRX(6);
+		//hatch panel finger is talon 7. 
     }
 
     public void motionMagic(){
