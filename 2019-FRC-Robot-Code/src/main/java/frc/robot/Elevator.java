@@ -41,6 +41,7 @@ public class Elevator {
         elevatorMotorTwo = new TalonSRX(8);
 		elevatorMotorThree = new TalonSRX(6);
 		//hatch panel finger is talon 7. 
+		//for comp switch 7 to elevatorOne 
     }
 
     public void motionMagic(){
