@@ -157,12 +157,12 @@ public class Robot extends IterativeRobot {
     * input and the right joystick controls the wrist manually      *
     */
 
-    if(controller.getLeftBumperDriver() && (controller.getYLeftDriver() > controllerJoystickDeadzone || controller.getYLeftDriver() < controllerJoystickDeadzone)){
-      elevator.manualElevatorControl(controller.getYLeftDriver() * -1);
+    if(controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone*-1){
+      elevator.manualElevatorControl(controller.getYLeftCoDriver() * -1);
     }else{
       elevator.manualElevatorControl(0.0);
     }
-    if(controller.getLeftBumperDriver() && (controller.getYRightDriver() > controllerJoystickDeadzone || controller.getYRightDriver() < controllerJoystickDeadzone)){
+    if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
       elevator.manualWristControl(controller.getYRightDriver());
     }else{
       elevator.manualWristControl(0.0);
