@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
   private double controllerJoystickDeadzone = 0.2;
   private double controllerTriggerDeadzone = 0.05;
   private Vision vision = Vision.getInstance();
-
+  private Pneumatics pneumatics = Pneumatics.getInstance();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -290,6 +290,9 @@ public class Robot extends IterativeRobot {
   @Override
   public void testPeriodic() {
 
+    SmartDashboard.putBoolean("pressureSwitch", pneumatics.pressureSwitch);
+    SmartDashboard.putBoolean("enabled", pneumatics.enabled);
+    SmartDashboard.putNumber("compressor current", pneumatics.compressor.getCompressorCurrent());
     /*
     * Controls the drive system of the robot based on the output of the 
     * Limelight positioning software
@@ -309,15 +312,26 @@ public class Robot extends IterativeRobot {
     }else{
       //do nothing
     }
-    
+    if(controller.getLeftBumperDriver()){
+      pneumatics.solenoidOne.set(false);
+      pneumatics.solenoidTwo.set(true);
+      pneumatics.solenoidThree.set(false);
+      pneumatics.solenoidFour.set(true);
+    }else{
+      pneumatics.solenoidOne.set(true);
+      pneumatics.solenoidTwo.set(false);
+      pneumatics.solenoidThree.set(true);
+      pneumatics.solenoidFour.set(false);
+    }
+
     // controls the claws with the bumpers
 
-    if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+   /* if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){
       drive.clawControl(controller.getRightTriggerDriver());
     }else if(controller.getLeftBumperDriver() && controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
       drive.clawControl(controller.getLeftTriggerDriver() * (-1));
     }else{
       drive.clawControl(0);
-    }
+    }*/
   }
 }
