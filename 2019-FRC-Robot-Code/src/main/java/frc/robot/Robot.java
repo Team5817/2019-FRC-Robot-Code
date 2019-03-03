@@ -312,6 +312,8 @@ public class Robot extends IterativeRobot {
     }else{
       //do nothing
     }
+
+    pneumatics.compressor.setClosedLoopControl(true);
     if(controller.getLeftBumperDriver()){
       pneumatics.solenoidOne.set(false);
       pneumatics.solenoidTwo.set(true);
