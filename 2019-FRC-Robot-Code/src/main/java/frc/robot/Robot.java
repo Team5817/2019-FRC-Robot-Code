@@ -196,6 +196,7 @@ public class Robot extends IterativeRobot {
     }else{
 
     }
+
     if(controller.getLeftBumperCoDriver()){
       position = Position.FINGERIN;
     }else if(controller.getRightBumperCoDriver()){
@@ -203,6 +204,7 @@ public class Robot extends IterativeRobot {
     }else{
 
     }
+    
     if(controller.getDpadDriver() == 270){
     position = Position.ZERO;
     }else if(controller.getDpadDriver() == 180){
@@ -237,6 +239,14 @@ public class Robot extends IterativeRobot {
     */
 
   switch(position){
+
+    case FINGERIN:
+    intake.setPanelIntakePosition(0);
+    break;
+
+    case FINGEROUT:
+    intake.setPanelIntakePosition(1000);
+   
     case PANELLOW:
     elevator.setElevatorPosition(10000);
     elevator.setWristPosition(0);
@@ -295,12 +305,7 @@ public class Robot extends IterativeRobot {
     }
     break;
 
-    case FINGERIN:
-    intake.setPanelIntakePosition(0);
-    break;
-    case FINGEROUT:
-    intake.setPanelIntakePosition(1000);
-   
+
     default:
       //do nothing
     break;
