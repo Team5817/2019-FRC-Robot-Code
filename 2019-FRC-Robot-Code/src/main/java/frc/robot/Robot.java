@@ -85,6 +85,7 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
     SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
     SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
+    SmartDashboard.putNumber("Panel Intake Position", intake.getPanelIntakePosition());
   }
 
   /**
@@ -130,6 +131,9 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Wrist Position", elevator.getWristPosition());
+    SmartDashboard.putNumber("Elevator Velocity", elevator.maxVelocity());
+    SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
 
     /*
      * Controls the six wheel base using the Y axis on the right joystick to control power  *
@@ -174,6 +178,31 @@ public class Robot extends IterativeRobot {
     * switch statement below                                        *
     */
 
+
+
+
+    pneumatics.compressor.setClosedLoopControl(true);
+
+    if(controller.getLeftBumperDriver()){
+      pneumatics.solenoidOne.set(false);
+      pneumatics.solenoidTwo.set(true);
+      pneumatics.solenoidThree.set(false);
+      pneumatics.solenoidFour.set(true);
+    }else if(controller.getRightBumperDriver()){
+      pneumatics.solenoidOne.set(true);
+      pneumatics.solenoidTwo.set(false);
+      pneumatics.solenoidThree.set(true);
+      pneumatics.solenoidFour.set(false);
+    }else{
+
+    }
+    if(controller.getLeftBumperCoDriver()){
+      position = Position.FINGERIN;
+    }else if(controller.getRightBumperCoDriver()){
+      position = Position.FINGEROUT;
+    }else{
+
+    }
     if(controller.getDpadDriver() == 270){
     position = Position.ZERO;
     }else if(controller.getDpadDriver() == 180){
@@ -209,13 +238,14 @@ public class Robot extends IterativeRobot {
 
   switch(position){
     case PANELLOW:
-    elevator.setElevatorPosition(100);
-    elevator.setWristPosition(100);
+    elevator.setElevatorPosition(10000);
+    elevator.setWristPosition(0);
     break;
 
     case INTAKE:
     elevator.setElevatorPosition(2100);
     elevator.setWristPosition(1050);
+    intake.setPanelIntakePosition(0);
     break;
     
     case PANELMID:
@@ -264,7 +294,13 @@ public class Robot extends IterativeRobot {
       elevator.manualWristControl(0.0);
     }
     break;
-    
+
+    case FINGERIN:
+    intake.setPanelIntakePosition(0);
+    break;
+    case FINGEROUT:
+    intake.setPanelIntakePosition(1000);
+   
     default:
       //do nothing
     break;
@@ -298,6 +334,11 @@ public class Robot extends IterativeRobot {
     * Limelight positioning software
     */
 
+    pneumatics.solenoidOne.set(true);
+    pneumatics.solenoidTwo.set(false);
+    pneumatics.solenoidThree.set(true);
+    pneumatics.solenoidFour.set(false);
+
     if (controller.getButtonYDriver()){
       if (vision.getdegRotationtoTarget()>0.0){
         drive.leftSideControl(vision.getdegRotationtoTarget()*-.125);
@@ -312,6 +353,7 @@ public class Robot extends IterativeRobot {
     }else{
       //do nothing
     }
+   
 
     pneumatics.compressor.setClosedLoopControl(true);
     if(controller.getLeftBumperDriver()){
@@ -319,13 +361,18 @@ public class Robot extends IterativeRobot {
       pneumatics.solenoidTwo.set(true);
       pneumatics.solenoidThree.set(false);
       pneumatics.solenoidFour.set(true);
-    }else{
+    }else if(controller.getRightBumperDriver()){
       pneumatics.solenoidOne.set(true);
       pneumatics.solenoidTwo.set(false);
       pneumatics.solenoidThree.set(true);
       pneumatics.solenoidFour.set(false);
+    }else{
+
     }
 
+    if(controller.getButtonADriver()){
+      
+    }
     // controls the claws with the bumpers
 
    /* if(controller.getLeftBumperDriver() && controller.getRightTriggerDriver() > controllerTriggerDeadzone){

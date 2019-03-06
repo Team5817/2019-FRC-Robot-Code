@@ -30,7 +30,8 @@ public class Elevator {
     TalonSRX elevatorMotorOne;
     TalonSRX elevatorMotorTwo;
     TalonSRX elevatorMotorThree;
-    TalonSRX wrist;
+	TalonSRX wrist;
+
 
 
     /* Elevator method assigns a object of the Talon Class for each physical Talon SRX used*/
@@ -62,10 +63,10 @@ public class Elevator {
 
 		/* set closed loop gains in slot0 - see documentation */
 		elevatorMotorOne.selectProfileSlot(0, 0);
-		elevatorMotorOne.config_kF(0, 0.2481, kTimeoutMs);
-		elevatorMotorOne.config_kP(0, 1.0, kTimeoutMs);
-		elevatorMotorOne.config_kI(0, 0.0001, kTimeoutMs);
-		elevatorMotorOne.config_kD(0, 1, kTimeoutMs);
+		elevatorMotorOne.config_kF(0, 0.2481, kTimeoutMs);//0.2481
+		elevatorMotorOne.config_kP(0, 1.0, kTimeoutMs);//1.0
+		elevatorMotorOne.config_kI(0, 0.0001, kTimeoutMs);//0.0001
+		elevatorMotorOne.config_kD(0, 1, kTimeoutMs);//1
 		/* set acceleration and cruise velocity - see documentation */
 		elevatorMotorOne.configMotionCruiseVelocity(5000, kTimeoutMs);
 		elevatorMotorOne.configMotionAcceleration(3500, kTimeoutMs);
@@ -116,6 +117,7 @@ public class Elevator {
         return wrist.getSelectedSensorPosition(0);
     }
         public void zero(){
+
             elevatorMotorOne.setSelectedSensorPosition(0, 0, 10);
             wrist.setSelectedSensorPosition(0, 0, 10);
     }
