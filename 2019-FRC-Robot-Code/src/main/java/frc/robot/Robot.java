@@ -197,14 +197,13 @@ public class Robot extends IterativeRobot {
 
     }
 
-    if(controller.getLeftBumperCoDriver()){
-      position = Position.FINGERIN;
-    }else if(controller.getRightBumperCoDriver()){
-      position = Position.FINGEROUT;
-    }else{
-
-    }
-    
+if(controller.getLeftBumperCoDriver() && position == Position.FINGERMANUAL){
+  position = Position.FINGERIN;
+}else if(controller.getLeftBumperCoDriver() && position == Position.FINGERIN){
+  position = Position.FINGEROUT;
+}else if(controller.getLeftBumperCoDriver() && position == Position.FINGEROUT){
+position = Position.FINGERMANUAL;
+}
     if(controller.getDpadDriver() == 270){
     position = Position.ZERO;
     }else if(controller.getDpadDriver() == 180){
@@ -246,6 +245,9 @@ public class Robot extends IterativeRobot {
 
     case FINGEROUT:
     intake.setPanelIntakePosition(1000);
+
+    case FINGERMANUAL:
+    intake.panelIntakeControl(0);;
    
     case PANELLOW:
     elevator.setElevatorPosition(10000);
@@ -375,8 +377,10 @@ public class Robot extends IterativeRobot {
 
     }
 
-    if(controller.getButtonADriver()){
-      
+    if(controller.getButtonADriver() && intake.getPanelIntakePosition() == 1000){
+      intake.setPanelIntakePosition(0);
+    }else if(controller.getButtonADriver() && intake.getPanelIntakePosition() == 0){
+      intake.setPanelIntakePosition(1000);
     }
     // controls the claws with the bumpers
 
