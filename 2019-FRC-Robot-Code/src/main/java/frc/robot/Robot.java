@@ -197,12 +197,12 @@ public class Robot extends IterativeRobot {
 
     }
 
-if(controller.getLeftBumperCoDriver() && position == Position.FINGERMANUAL){
+if(controller.getLeftBumperCoDriver() && position == Position.FINGEROFF){
   position = Position.FINGERIN;
 }else if(controller.getLeftBumperCoDriver() && position == Position.FINGERIN){
   position = Position.FINGEROUT;
 }else if(controller.getLeftBumperCoDriver() && position == Position.FINGEROUT){
-position = Position.FINGERMANUAL;
+position = Position.FINGEROFF;
 }
     if(controller.getDpadDriver() == 270){
     position = Position.ZERO;
@@ -246,7 +246,7 @@ position = Position.FINGERMANUAL;
     case FINGEROUT:
     intake.setPanelIntakePosition(1000);
 
-    case FINGERMANUAL:
+    case FINGEROFF:
     intake.panelIntakeControl(0);;
    
     case PANELLOW:
