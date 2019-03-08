@@ -40,7 +40,7 @@ public class Elevator {
         wrist = new TalonSRX(10);
         elevatorMotorOne = new TalonSRX(9);
         elevatorMotorTwo = new TalonSRX(8);
-		elevatorMotorThree = new TalonSRX(6);
+		elevatorMotorThree = new TalonSRX(7);
 		//hatch panel finger is talon 7. 
 		//for comp switch 7 to elevatorOne 
     }

@@ -39,6 +39,7 @@ public class Robot extends IterativeRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Position position = Position.MANUALOVERRIDE;
+  private PositionTwo positionTwo = PositionTwo.FINGEROFF;
   private Drive drive = Drive.getInstance();
   private Controller controller = Controller.getInstance();
   private Intake intake = Intake.getInstance();
@@ -77,12 +78,7 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("Wrist Position", elevator.getWristPosition());
     SmartDashboard.putNumber("Elevator Velocity", elevator.maxVelocity());
     SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
-    if(controller.getStartButtonCoDriver()){
-      elevator.zero();
-    }
-    SmartDashboard.putNumber("Yaw", gyro.getAngleYaw());
-    SmartDashboard.putNumber("Pitch", gyro.getAnglePitch());
-    SmartDashboard.putNumber("Roll", gyro.getAngleRoll());
+
     SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
     SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
     SmartDashboard.putNumber("Panel Intake Position", intake.getPanelIntakePosition());
@@ -114,9 +110,10 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousPeriodic() {
+
     switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+        //put auto code here
         break;
       case kDefaultAuto:
       default:
@@ -162,14 +159,12 @@ public class Robot extends IterativeRobot {
     */
 
     if(controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone*-1){
-      elevator.manualElevatorControl(controller.getYLeftCoDriver() * -1);
+      position = Position.MANUALOVERRIDE;
     }else{
-      elevator.manualElevatorControl(0.0);
     }
     if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
-      elevator.manualWristControl(controller.getYRightDriver());
+      position = Position.MANUALOVERRIDE;
     }else{
-      elevator.manualWristControl(0.0);
     }
 
     /*
@@ -178,57 +173,45 @@ public class Robot extends IterativeRobot {
     * switch statement below                                        *
     */
 
-
-
-
-    pneumatics.compressor.setClosedLoopControl(true);
-
-    if(controller.getLeftBumperDriver()){
-      pneumatics.solenoidOne.set(false);
-      pneumatics.solenoidTwo.set(true);
-      pneumatics.solenoidThree.set(false);
-      pneumatics.solenoidFour.set(true);
-    }else if(controller.getRightBumperDriver()){
-      pneumatics.solenoidOne.set(true);
-      pneumatics.solenoidTwo.set(false);
-      pneumatics.solenoidThree.set(true);
-      pneumatics.solenoidFour.set(false);
-    }else{
-
-    }
-
-if(controller.getLeftBumperCoDriver() && position == Position.FINGEROFF){
-  position = Position.FINGERIN;
-}else if(controller.getLeftBumperCoDriver() && position == Position.FINGERIN){
-  position = Position.FINGEROUT;
-}else if(controller.getLeftBumperCoDriver() && position == Position.FINGEROUT){
-position = Position.FINGEROFF;
+if(controller.getLeftBumperDriver()){
+drive.clawControl(1);;
+}else if(controller.getRightBumperDriver()){
+drive.clawControl(-1);
+}else{
+  drive.clawControl(0);
 }
-    if(controller.getDpadDriver() == 270){
-    position = Position.ZERO;
-    }else if(controller.getDpadDriver() == 180){
-      position = Position.PANELLOW;
-    }else if(controller.getDpadDriver() == 90){
-      position = Position.PANELMID;
-    }else if(controller.getDpadDriver() == 0){
-      position = Position.PANELHIGH;
-    }else if(controller.getButtonADriver()){
-      position = Position.INTAKE;
+
+if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
+  elevator.zero();
+}
+
+    if(controller.getButtonADriver()){
+      positionTwo = PositionTwo.FINGEROUT;
     }else if(controller.getButtonBDriver()){
-      position = Position.CARGOLOW;
-    }else if(controller.getButtonXDriver()){
-      position = Position.CARGOMID;
+      position = Position.WRISTOUT;
+      positionTwo = PositionTwo.FINGERIN;
+    }else if(controller.getButtonACoDriver()){
+      position = Position.INTAKE;
+    }else if(controller.getButtonBCoDriver()){
+      position = Position.PANELLOW;
+    }else if(controller.getButtonXCoDriver()){
+      position = Position.PANELMID;
     }else if(controller.getButtonYDriver()){
-      position = Position.CARGOHIGH;
-    }else if(controller.getButtonYCoDriver()){
-      position = Position.CARGOSHIP;
+      position = Position.PANELHIGH;
     }else if(controller.getRightTriggerCoDriver()>0.05){
       position = Position.MANUALOVERRIDE;
+    }else if(controller.getLeftTriggerCoDriver() > controllerTriggerDeadzone){
+      position = Position.CARGOHIGH;
+    }else if(controller.getRightBumperDriver()){
+      position = Position.CARGOMID;
+    }else if(controller.getLeftBumperCoDriver()){
+      position = Position.CARGOLOW;
     }else if(controller.getRightBumperDriver()){
       position = Position.ZERO;
     }else{
       // does not change state if no button is pressed
     }
+  
 
     /*
     * switch statment switches the elevator position based on the state of the variable     *
@@ -237,37 +220,49 @@ position = Position.FINGEROFF;
     * is changed by pressing a different button
     */
 
-  switch(position){
-
+  switch(positionTwo){
+    
     case FINGERIN:
-    intake.setPanelIntakePosition(0);
+    intake.panelIntakeControl(0);
     break;
 
     case FINGEROUT:
-    intake.setPanelIntakePosition(1000);
+    intake.panelIntakeControl(1);
+    break;
 
     case FINGEROFF:
     intake.panelIntakeControl(0);;
-   
+    break;
+
+    default:
+    positionTwo = PositionTwo.FINGERIN;
+    break;
+  }
+
+  switch(position){
     case PANELLOW:
     elevator.setElevatorPosition(10000);
     elevator.setWristPosition(0);
     break;
 
+    case WRISTOUT:
+    elevator.setWristPosition(500);
+    break;
+
     case INTAKE:
-    elevator.setElevatorPosition(2100);
-    elevator.setWristPosition(1050);
+    elevator.setElevatorPosition(0);
+    elevator.setWristPosition(1320);
     intake.setPanelIntakePosition(0);
     break;
     
     case PANELMID:
     elevator.setElevatorPosition(200);
-    elevator.setWristPosition(200);
+    elevator.setWristPosition(0);
     break;
     
     case PANELHIGH:
     elevator.setElevatorPosition(300);
-    elevator.setWristPosition(300);
+    elevator.setWristPosition(0);
     break;
     
     case CARGOLOW:
@@ -293,9 +288,11 @@ position = Position.FINGEROFF;
     case  ZERO:
     elevator.setElevatorPosition(500);
     elevator.setWristPosition(50);
+    break;
+    
 
     case MANUALOVERRIDE:
-    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone){
+    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone*-1){
       elevator.manualElevatorControl(controller.getYLeftCoDriver());
     }else{
       elevator.manualElevatorControl(0);
@@ -305,11 +302,12 @@ position = Position.FINGEROFF;
     }else{
       elevator.manualWristControl(0.0);
     }
+    System.out.println("testing");
     break;
 
 
     default:
-      //do nothing
+      position=Position.MANUALOVERRIDE;
     break;
     }
     /*
@@ -317,11 +315,11 @@ position = Position.FINGEROFF;
     * The right trigger on the driver controller pushes out
     */
     if (controller.getRightTriggerDriver() > controllerTriggerDeadzone){
-      intake.leftIntakeControl(0.75 * (-1));
-      intake.rightIntakeControl(0.75);
-    }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
       intake.leftIntakeControl(0.75);
-      intake.rightIntakeControl(0.75 * (-1));
+      intake.rightIntakeControl((0.75) * (-1));
+    }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+      intake.leftIntakeControl((0.75) * (-1));
+      intake.rightIntakeControl(0.75);
     }else{
       intake.leftIntakeControl(0);
       intake.rightIntakeControl(0);

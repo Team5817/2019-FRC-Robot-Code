@@ -27,7 +27,7 @@ public class Intake {
     
     public TalonSRX rightIntake;
     public TalonSRX leftIntake;
-    TalonSRX panelIntake = new TalonSRX(7);
+    TalonSRX panelIntake = new TalonSRX(6);
 
     public Intake(){
         rightIntake = new TalonSRX(13);

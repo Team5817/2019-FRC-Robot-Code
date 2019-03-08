@@ -63,7 +63,7 @@ public class Drive {
 
     // Controls the climbing claws with a single input
     public void clawControl(double input){
-        clawLeft.follow(clawRight);
+        clawLeft.set(ControlMode.PercentOutput, input * -1);
         clawRight.set(ControlMode.PercentOutput, input);
     }
 
