@@ -49,7 +49,7 @@ public class Elevator {
         int kTimeoutMs=10;
         elevatorMotorOne.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, kTimeoutMs);
 		elevatorMotorOne.setSensorPhase(true);
-		elevatorMotorOne.setInverted(false);
+		elevatorMotorOne.setInverted(true);
 
 		/* Set relevant frame periods to be at least as fast as periodic rate */
 		elevatorMotorOne.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
@@ -64,12 +64,12 @@ public class Elevator {
 		/* set closed loop gains in slot0 - see documentation */
 		elevatorMotorOne.selectProfileSlot(0, 0);
 		elevatorMotorOne.config_kF(0, 0.2481, kTimeoutMs);//0.2481
-		elevatorMotorOne.config_kP(0, 1.0, kTimeoutMs);//1.0
-		elevatorMotorOne.config_kI(0, 0.0001, kTimeoutMs);//0.0001
-		elevatorMotorOne.config_kD(0, 1, kTimeoutMs);//1
+		elevatorMotorOne.config_kP(0, 0.5, kTimeoutMs);//1.0
+		elevatorMotorOne.config_kI(0, 0, kTimeoutMs);//0.0001
+		elevatorMotorOne.config_kD(0, 0, kTimeoutMs);//1
 		/* set acceleration and cruise velocity - see documentation */
-		elevatorMotorOne.configMotionCruiseVelocity(5000, kTimeoutMs);
-		elevatorMotorOne.configMotionAcceleration(3500, kTimeoutMs);
+		elevatorMotorOne.configMotionCruiseVelocity(10000, kTimeoutMs);
+		elevatorMotorOne.configMotionAcceleration(10000, kTimeoutMs);
 		/* zero the sensor */
         elevatorMotorOne.setSelectedSensorPosition(0, 0, kTimeoutMs);
         
@@ -90,12 +90,12 @@ public class Elevator {
 		/* set closed loop gains in slot0 - see documentation */
 		wrist.selectProfileSlot(0, 0);
 		wrist.config_kF(0, 0.15, kTimeoutMs);
-		wrist.config_kP(0, 0.8, kTimeoutMs);
-		wrist.config_kI(0, 0.001, kTimeoutMs);
-		wrist.config_kD(0, 2.0, kTimeoutMs);
+		wrist.config_kP(0, 1.0, kTimeoutMs);
+		wrist.config_kI(0, 0.0005, kTimeoutMs);
+		wrist.config_kD(0, 100, kTimeoutMs);
 		/* set acceleration and cruise velocity - see documentation */
-		wrist.configMotionCruiseVelocity(3000, kTimeoutMs);
-		wrist.configMotionAcceleration(1000, kTimeoutMs);
+		wrist.configMotionCruiseVelocity(1500, kTimeoutMs);
+		wrist.configMotionAcceleration(750, kTimeoutMs);
 		/* zero the sensor */
 		wrist.setSelectedSensorPosition(0, 0, kTimeoutMs);
 	}
@@ -105,7 +105,7 @@ public class Elevator {
     public void manualElevatorControl(double input){
         elevatorMotorThree.follow(elevatorMotorOne);
         elevatorMotorTwo.follow(elevatorMotorOne);
-        elevatorMotorOne.set(ControlMode.PercentOutput, input);
+        elevatorMotorOne.set(ControlMode.PercentOutput, input*-1);
     }
     public void manualWristControl(double input){
         wrist.set(ControlMode.PercentOutput, input);

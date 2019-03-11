@@ -79,11 +79,14 @@ public class Intake {
 
     public void setPanelIntakePosition(int value){
     panelIntake.set(ControlMode.MotionMagic, value);
-        }
-        public int getPanelIntakePosition(){
-            return panelIntake.getSelectedSensorPosition(0);
-        }
+    }
     public void panelIntakeControl(double input){
         panelIntake.set(ControlMode.PercentOutput, input);
+    }
+    public int getPanelIntakePosition(){
+        return panelIntake.getSelectedSensorPosition(0);
+    }
+    public void zero(){
+        panelIntake.setSelectedSensorPosition(0);
     }
 }

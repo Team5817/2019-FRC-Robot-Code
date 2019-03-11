@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
     SmartDashboard.putNumber("Wrist Position", elevator.getWristPosition());
     SmartDashboard.putNumber("Elevator Velocity", elevator.maxVelocity());
     SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
-
+    SmartDashboard.putNumber("Intake Position", intake.getPanelIntakePosition());
     SmartDashboard.putNumber("LimeLightX", vision.getdegRotationtoTarget());
     SmartDashboard.putNumber("LimeLightY", vision.getdegVerticaltoTarget());
     SmartDashboard.putNumber("Panel Intake Position", intake.getPanelIntakePosition());
@@ -110,17 +110,204 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousPeriodic() {
+    SmartDashboard.putNumber("Wrist Position", elevator.getWristPosition());
+    SmartDashboard.putNumber("Elevator Velocity", elevator.maxVelocity());
+    SmartDashboard.putNumber("Elevator Position", elevator.getElevatorPosition());
 
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        //put auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
+    /*
+     * Controls the six wheel base using the Y axis on the right joystick to control power  *
+     * and the X axis on the left joystick to adjust the output in order to allow the robot *
+     * to turn
+     */
+    
+    if (controller.getYLeftDriver() > controllerJoystickDeadzone){
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
+    }else if(controller.getYLeftDriver() < controllerJoystickDeadzone * (-1) ){
+      drive.rightSideControl(controller.getYLeftDriver() - (controller.getXRightDriver()*0.3));
+      drive.leftSideControl(controller.getYLeftDriver() + (controller.getXRightDriver()*0.3));
+    }else if(controller.getXRightDriver() < controllerJoystickDeadzone *(-1) || controller .getXRightDriver() > controllerJoystickDeadzone){
+      drive.rightSideControl(controller.getXRightDriver()*(-1));
+      drive.leftSideControl(controller.getXRightDriver());
+    }else {
+      drive.rightSideControl(0);
+      drive.leftSideControl(0);
+    }
+
+    /*
+    * Controls the elevator manually based on the input from the    *
+    * codriver controller. The left joystick controls the elevator  *
+    * input and the right joystick controls the wrist manually      *
+    */
+
+    if(controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone*-1){
+      position = Position.MANUALOVERRIDE;
+    }else{
+    }
+    if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
+      position = Position.MANUALOVERRIDE;
+    }else{
+    }
+
+    /*
+    * Changes the state of the vartiable 'position' which adjusts   *
+    * the height of the elevator based on the positions of the      *
+    * switch statement below                                        *
+    */
+
+if(controller.getLeftBumperDriver()){
+drive.clawControl(1);;
+}else if(controller.getRightBumperDriver()){
+drive.clawControl(-1);
+}else{
+  drive.clawControl(0);
+}
+
+if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
+  elevator.zero();
+}
+
+    if(controller.getButtonADriver()){
+      positionTwo = PositionTwo.FINGEROUT;
+    }else if(controller.getButtonBDriver()){
+ 
+      positionTwo = PositionTwo.FINGERIN;
+    }else if(controller.getButtonACoDriver()){
+      position = Position.INTAKE;
+    }else if(controller.getButtonBCoDriver()){
+      position = Position.PANELLOW;
+    }else if(controller.getButtonXCoDriver()){
+      position = Position.PANELMID;
+    }else if(controller.getButtonYDriver()){
+      position = Position.PANELHIGH;
+    }else if(controller.getRightTriggerCoDriver()>0.05){
+      position = Position.MANUALOVERRIDE;
+    }else if(controller.getLeftTriggerCoDriver() > controllerTriggerDeadzone){
+      position = Position.CARGOHIGH;
+    }else if(controller.getRightBumperDriver()){
+      position = Position.CARGOMID;
+    }else if(controller.getLeftBumperCoDriver()){
+      position = Position.CARGOLOW;
+    }else if(controller.getRightBumperDriver()){
+      position = Position.ZERO;
+    }else{
+      // does not change state if no button is pressed
+    }
+  
+
+    /*
+    * switch statment switches the elevator position based on the state of the variable     *
+    * 'position' which is determined by the if/else statement above by setting the variable *
+    * and continuously checking it the robot is able to hold its position until the state   *
+    * is changed by pressing a different button
+    */
+
+  switch(positionTwo){
+    
+    case FINGERIN:
+    intake.panelIntakeControl(0);
+    break;
+
+    case FINGEROUT:
+    intake.panelIntakeControl(0.6);
+    break;
+
+    case FINGEROFF:
+    intake.panelIntakeControl(0);;
+    break;
+
+    default:
+    positionTwo = PositionTwo.FINGERIN;
+    break;
+  }
+
+  switch(position){
+    case PANELLOW:
+    elevator.setElevatorPosition(-4466);
+    elevator.setWristPosition(0);
+    break;
+
+    case WRISTOUT:
+    elevator.setWristPosition(500);
+    break;
+
+    case INTAKE:
+    elevator.setElevatorPosition(0);
+    elevator.setWristPosition(1320);
+    intake.setPanelIntakePosition(0);
+    break;
+    
+    case PANELMID:
+    elevator.setElevatorPosition(-12733);
+    elevator.setWristPosition(0);
+    break;
+    
+    case PANELHIGH:
+    elevator.setElevatorPosition(300);//over 9000
+    elevator.setWristPosition(0);
+    break;
+    
+    case CARGOLOW:
+    elevator.setElevatorPosition(-3089);
+    elevator.setWristPosition(779);
+    break;
+      
+    case CARGOMID:
+    elevator.setElevatorPosition(-10309);
+    elevator.setWristPosition(779);
+    break;
+    
+    case CARGOHIGH:
+    elevator.setElevatorPosition(-16763);
+    elevator.setWristPosition(548);
+    break;
+    
+    case CARGOSHIP:
+    elevator.setElevatorPosition(250);
+    elevator.setWristPosition(250);
+    break;
+
+    case  ZERO:
+    elevator.setElevatorPosition(500);
+    elevator.setWristPosition(50);
+    break;
+    
+
+    case MANUALOVERRIDE:
+    if (controller.getYLeftCoDriver() > controllerJoystickDeadzone || controller.getYLeftCoDriver() < controllerJoystickDeadzone*-1){
+      elevator.manualElevatorControl(controller.getYLeftCoDriver());
+    }else{
+      elevator.manualElevatorControl(0);
+    }
+    if(controller.getYRightCoDriver() > controllerJoystickDeadzone || controller.getYRightCoDriver() < controllerJoystickDeadzone*-1){
+      elevator.manualWristControl(controller.getYRightCoDriver());
+    }else{
+      elevator.manualWristControl(0.0);
+    }
+    System.out.println("testing");
+    break;
+
+
+    default:
+      position=Position.MANUALOVERRIDE;
+    break;
+    }
+    /*
+    * The left trigger on the driver controller pulls in
+    * The right trigger on the driver controller pushes out
+    */
+    if (controller.getRightTriggerDriver() > controllerTriggerDeadzone){
+      intake.leftIntakeControl(0.75);
+      intake.rightIntakeControl((0.75) * (-1));
+    }else if(controller.getLeftTriggerDriver() > controllerTriggerDeadzone){
+      intake.leftIntakeControl((0.75) * (-1));
+      intake.rightIntakeControl(0.75);
+    }else{
+      intake.leftIntakeControl(0);
+      intake.rightIntakeControl(0);
     }
   }
+  
 
   /**
    * This function is called periodically during operator control.
@@ -183,12 +370,12 @@ drive.clawControl(-1);
 
 if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
   elevator.zero();
+  intake.zero();
 }
 
     if(controller.getButtonADriver()){
       positionTwo = PositionTwo.FINGEROUT;
     }else if(controller.getButtonBDriver()){
-      position = Position.WRISTOUT;
       positionTwo = PositionTwo.FINGERIN;
     }else if(controller.getButtonACoDriver()){
       position = Position.INTAKE;
@@ -202,11 +389,11 @@ if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
       position = Position.MANUALOVERRIDE;
     }else if(controller.getLeftTriggerCoDriver() > controllerTriggerDeadzone){
       position = Position.CARGOHIGH;
-    }else if(controller.getRightBumperDriver()){
+    }else if(controller.getRightBumperCoDriver()){
       position = Position.CARGOMID;
     }else if(controller.getLeftBumperCoDriver()){
       position = Position.CARGOLOW;
-    }else if(controller.getRightBumperDriver()){
+    }else if(controller.getRightBumperCoDriver()){
       position = Position.ZERO;
     }else{
       // does not change state if no button is pressed
@@ -223,15 +410,15 @@ if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
   switch(positionTwo){
     
     case FINGERIN:
-    intake.panelIntakeControl(0);
+    intake.setPanelIntakePosition(0);
     break;
 
     case FINGEROUT:
-    intake.panelIntakeControl(1);
+    intake.setPanelIntakePosition(-1200);
     break;
 
     case FINGEROFF:
-    intake.panelIntakeControl(0);;
+    intake.panelIntakeControl(0);
     break;
 
     default:
@@ -241,8 +428,8 @@ if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
 
   switch(position){
     case PANELLOW:
-    elevator.setElevatorPosition(10000);
-    elevator.setWristPosition(0);
+    elevator.setWristPosition(225);
+    elevator.setElevatorPosition(4300);
     break;
 
     case WRISTOUT:
@@ -250,39 +437,39 @@ if(controller.getBackButtonDriver() || controller.getBackButtonCoDriver()){
     break;
 
     case INTAKE:
-    elevator.setElevatorPosition(0);
-    elevator.setWristPosition(1320);
+    elevator.setElevatorPosition(711);
+    elevator.setWristPosition(1412);
     intake.setPanelIntakePosition(0);
     break;
     
     case PANELMID:
-    elevator.setElevatorPosition(200);
-    elevator.setWristPosition(0);
+    elevator.setWristPosition(225);
+    elevator.setElevatorPosition(12733);
     break;
     
     case PANELHIGH:
-    elevator.setElevatorPosition(300);
-    elevator.setWristPosition(0);
+    elevator.setElevatorPosition(12733);
+    elevator.setWristPosition(100);
     break;
     
     case CARGOLOW:
-    elevator.setElevatorPosition(9344);
-    elevator.setWristPosition(744);
+    elevator.setElevatorPosition(3089);
+    elevator.setWristPosition(770);
     break;
       
     case CARGOMID:
-    elevator.setElevatorPosition(26080);
-    elevator.setWristPosition(744);
+    elevator.setElevatorPosition(10309);
+    elevator.setWristPosition(770);
     break;
     
     case CARGOHIGH:
-    elevator.setElevatorPosition(36000);
-    elevator.setWristPosition(744);
+    elevator.setElevatorPosition(16763);
+    elevator.setWristPosition(548);
     break;
     
     case CARGOSHIP:
-    elevator.setElevatorPosition(250);
-    elevator.setWristPosition(250);
+    elevator.setElevatorPosition(10309);
+    elevator.setWristPosition(770);
     break;
 
     case  ZERO:
